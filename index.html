@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Landy Decor — праздничное оформление пространств в Ташкенте</title>
+<meta name="description" content="Landy Decor — новогоднее оформление фасадов, магазинов, офисов, кафе и частных домов в Ташкенте. Эскиз, изготовление, монтаж и демонтаж — под ключ.">
+<meta property="og:title" content="Landy Decor — мы создаём праздник">
+<meta property="og:description" content="Новогоднее оформление для бизнеса и дома. Ташкент.">
+<meta property="og:image" content="media/intro-cut.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/decor.css">
+</head>
+<body data-tone="night">
+<!--
+  СЕТКА: 12 колонок (на телефоне 6). Всё содержимое лежит в .grid, ширина задаётся классами .s1–.s12,
+  начальная колонка — .c2–.c9. Нажмите G, чтобы увидеть колонки поверх страницы.
+  ФОН: один общий слой .stage на всю страницу; при прокрутке он мягко меняет тон
+  (data-tone у секции: night / velvet / pine / ink). У самих секций фона нет — поэтому нет и швов между блоками.
+  МЕДИА: media/ — фото WebP до 2400px, видео H.264 1080p. Исходники — images/materials/.
+-->
+
+<div class="stage" aria-hidden="true">
+  <i class="l-night"></i><i class="l-velvet"></i><i class="l-pine"></i><i class="l-ink"></i>
+  <div class="lights"></div>
+</div>
+
+<div class="loader" aria-hidden="true">
+  <div class="loader-word"><span>L</span><span>A</span><span>N</span><span>D</span><span>Y</span><span class="dot">·</span><span>D</span><span>E</span><span>C</span><span>O</span><span>R</span></div>
+</div>
+
+<div class="grid-overlay" aria-hidden="true"><div class="grid">
+  <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+</div></div>
+<div class="progress" aria-hidden="true"><span></span></div>
+
+<!-- ============ ШАПКА: лого 3 · меню 6 · кнопка 3 ============ -->
+<header class="hdr" id="hdr">
+  <div class="grid hdr-grid">
+    <a href="#top" class="logo s3" data-to="#top">LANDY<span>·</span>DECOR</a>
+    <nav class="hdr-nav s6">
+      <a href="#works" data-to="#works">Работы</a>
+      <a href="#story" data-to="#story">История</a>
+      <a href="#services" data-to="#services">Что оформляем</a>
+      <a href="#live" data-to="#live">Вживую</a>
+      <a href="#process" data-to="#process">Процесс</a>
+    </nav>
+    <div class="hdr-cta s3"><a href="#contact" class="btn btn-sm" data-to="#contact">Обсудить проект</a></div>
+  </div>
+</header>
+
+<main>
+
+<!-- ============ 1. ПЕРВЫЙ ЭКРАН: заставка LANDY·DECOR → нарезка на весь экран с заголовком ============ -->
+<!-- media/intro-cut.mp4 (1920×1080) для компьютера и intro-cut-m.mp4 (1080×1920) для телефона — выбирает decor.js.
+     8 планов по 2 c: бархатная драпировка, ёлка с бантом, шары, руки, бант на лестнице, бархатный бант, монтаж бусин, ёлка Oqtepa Lavash. -->
+<section class="intro" id="top" data-tone="night">
+  <div class="intro-frame">
+    <img class="intro-poster" src="media/intro-cut.webp" alt="" aria-hidden="true">
+    <video class="hero-vid" muted loop playsinline autoplay preload="auto" poster="media/intro-cut.webp"
+           data-desk="media/intro-cut.mp4" data-mob="media/intro-cut-m.mp4" data-mob-poster="media/intro-cut-m.webp"
+           aria-label="Нарезка новогоднего декора: бархат, ёлки, банты, монтаж"></video>
+    <div class="intro-shade"></div>
+  </div>
+
+  <div class="grid intro-meta">
+    <span class="s6">Студия новогоднего декора</span>
+    <span class="s6 right">Сезон 2026/27 · Ташкент</span>
+  </div>
+
+  <div class="intro-caption">
+    <div class="grid hero-main">
+      <div class="s7">
+        <span class="eyebrow">Landy Decor</span>
+        <h1>Мы не украшаем пространство —<br>мы создаём в нём <em>праздник</em></h1>
+        <div class="hero-actions">
+          <a href="#contact" class="btn" data-to="#contact">Обсудить проект</a>
+          <a href="#works" class="btn btn-line" data-to="#works">Смотреть работы</a>
+        </div>
+      </div>
+      <aside class="s4 c9 hero-card">
+        <p class="intro-sub">Новогоднее оформление фасадов, магазинов, офисов, кафе и частных домов. От эскиза до демонтажа.</p>
+        <div class="hero-thumbs">
+          <a href="#works" data-to="#works"><img src="media/w-korzinka-hall.webp" alt="Korzinka — ёлка в торговом зале"></a>
+          <a href="#works" data-to="#works"><img src="media/svc-facade.webp" alt="Световая арка у входа"></a>
+          <a href="#works" data-to="#works"><img src="media/d-balls.webp" alt="Шары и бархатные ленты"></a>
+        </div>
+        <div class="hero-count" data-countdown><span>До Нового года</span><b data-d>—</b><em>дней</em></div>
+      </aside>
+    </div>
+    <div class="grid hero-bar">
+      <span class="s8">Нам доверяют: <b>Korzinka · Golden House · Testo · Infinity · Oqtepa Lavash</b></span>
+      <span class="s4 right">Ташкент · с 2018</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2. МАНИФЕСТ: подпись 2 · текст 10 · факты 4 × 3 · отсчёт 2 / 6 / 4 ============ -->
+<section class="statement sec tone-velvet" data-tone="velvet">
+  <div class="grid">
+    <span class="eyebrow s2">Манифест</span>
+    <p class="statement-text s10" data-split>Декор — это не коробка игрушек и гирлянда на ёлке. Это <em>свет</em>, <em>масштаб</em> и <em>эмоция</em>, которые человек чувствует ещё с улицы — и помнит после праздника.</p>
+
+    <div class="fact s3 m3" data-r><b data-num="2018">2018</b><span>первый проданный венок</span></div>
+    <div class="fact s3 m3" data-r><b data-num="7">7</b><span>брендов доверили нам Новый год</span></div>
+    <div class="fact s3 m3" data-r><b>3 этапа</b><span>эскиз, изготовление, монтаж</span></div>
+    <div class="fact s3 m3" data-r><b>1 команда</b><span>от идеи до демонтажа</span></div>
+
+    <span class="ny-label s2" data-r>До Нового года</span>
+    <span class="ny-nums s6" data-countdown data-r><b data-d>—</b><i>дн</i><b data-h>—</b><i>ч</i><b data-m>—</b><i>мин</i><b data-s>—</b><i>сек</i></span>
+    <a class="ny-link s4 right" href="#contact" data-to="#contact" data-r>Забронировать дату →</a>
+  </div>
+</section>
+
+<!-- ============ 3. РАБОТЫ: горизонтальная плёнка (вступление 3 колонки, карточки 3 и 5) ============ -->
+<section class="works" id="works" data-tone="night">
+  <div class="works-pin">
+    <div class="h-track">
+      <div class="h-intro">
+        <span class="eyebrow">Портфолио</span>
+        <h2>Объекты,<br>которые <em>светятся</em></h2>
+        <p>Листайте вниз — кадры поедут в сторону.</p>
+        <div class="h-count"><b>01</b> / <span>09</span></div>
+        <a href="#contact" class="btn btn-line btn-sm" data-to="#contact">Хочу так же</a>
+      </div>
+      <figure class="h-card"><div class="h-img"><img src="media/w-korzinka-hall.webp" alt="Ёлка с красными драпировками в торговом зале Korzinka" loading="lazy"></div><figcaption><b>01</b> Korzinka <span>Торговый зал</span></figcaption></figure>
+      <figure class="h-card h-wide"><div class="h-img"><img src="media/w-oqtepa-facade.webp" alt="Новогодний фасад Oqtepa Lavash" loading="lazy"></div><figcaption><b>02</b> Oqtepa Lavash <span>Фасад</span></figcaption></figure>
+      <figure class="h-card"><div class="h-img"><video class="vid" muted loop playsinline preload="none" poster="media/w-stairs.webp" data-src="media/w-stairs.mp4" aria-label="Лестница с бантами и гирляндой"></video></div><figcaption><b>03</b> Лестница <span>Банты и гирлянда</span></figcaption></figure>
+      <figure class="h-card"><div class="h-img"><img src="media/w-testo.webp" alt="Новогодний венок Testo" loading="lazy"></div><figcaption><b>04</b> Testo <span>Венок</span></figcaption></figure>
+      <figure class="h-card h-wide"><div class="h-img"><img src="media/w-infinity.webp" alt="Новогоднее оформление ресепшн Infinity Luxury Residence" loading="lazy"></div><figcaption><b>05</b> Infinity Luxury Residence <span>Ресепшн</span></figcaption></figure>
+      <figure class="h-card"><div class="h-img"><img src="media/w-private.webp" alt="Белая ёлка в интерьере" loading="lazy"></div><figcaption><b>06</b> Интерьер <span>Ёлка</span></figcaption></figure>
+      <figure class="h-card"><div class="h-img"><img src="media/w-oqtepa-int.webp" alt="Лестница с гирляндами в Oqtepa Lavash" loading="lazy"></div><figcaption><b>07</b> Oqtepa Lavash <span>Интерьер</span></figcaption></figure>
+      <figure class="h-card"><div class="h-img"><img src="media/w-wood-stairs.webp" alt="Деревянная лестница с гирляндой" loading="lazy"></div><figcaption><b>08</b> Лестница <span>Гирлянда</span></figcaption></figure>
+      <figure class="h-card"><div class="h-img"><img src="media/w-korzinka-cash.webp" alt="Кассовая зона Korzinka в новогоднем декоре" loading="lazy"></div><figcaption><b>09</b> Korzinka <span>Кассовая зона</span></figcaption></figure>
+      <div class="h-end">
+        <p>Ваш объект<br>может быть <em>следующим</em></p>
+        <a href="#contact" class="btn" data-to="#contact">Обсудить проект</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 4. КИНО-ВСТАВКА: кадр размером 6 колонок раскрывается на весь экран ============ -->
+<!-- media/cine-facade.mp4 — ночной фасад Oqtepa Lavash (IMG_7115), 1920×1080 -->
+<section class="cine" data-tone="night" aria-label="Фасад Oqtepa Lavash ночью">
+  <div class="cine-pin">
+    <div class="cine-frame">
+      <video class="vid" muted loop playsinline preload="none" poster="media/cine-facade.webp" data-src="media/cine-facade.mp4" aria-label="Ночной фасад Oqtepa Lavash в новогоднем оформлении"></video>
+      <div class="cine-shade"></div>
+    </div>
+    <div class="grid cine-words" aria-hidden="true">
+      <span class="cw cw-l s12">Праздник</span>
+      <span class="cw cw-r s12">видно с улицы</span>
+    </div>
+    <div class="grid cine-cap">
+      <p class="s5">Фасад — первое, что видит гость. Свет и декор на нём работают как вывеска: днём и особенно вечером.</p>
+      <span class="s4 c9 right">Oqtepa Lavash · фасад</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 5. ИСТОРИЯ: сцена 6 колонок · главы 5 (с 8-й) ============ -->
+<section class="story" id="story" data-tone="pine">
+  <div class="grid story-grid">
+    <div class="story-media s6">
+      <div class="sm-img is-active" data-scene="0"><img src="media/story-wreath.webp" alt="" loading="lazy"></div>
+      <div class="sm-img" data-scene="1"><video class="vid" muted loop playsinline preload="none" poster="media/craft.webp" data-src="media/craft.mp4" aria-label="Ручная работа: бархатный бант"></video></div>
+      <!-- Сцена 3 — видео-обращение Нигины (IMG_9689) во весь рост сцены, со звуком по кнопке -->
+      <div class="sm-img sm-talk" data-scene="2">
+        <img class="talk-bg" src="media/talk-bg.webp" alt="" aria-hidden="true">
+        <video class="talk-vid" playsinline preload="none" poster="media/talk.webp" src="media/talk.mp4" aria-label="Видео-обращение Нигины Ахмедовой"></video>
+        <button class="talk-play" type="button" data-talk><span>▶</span>Смотреть обращение · 40 сек</button>
+      </div>
+      <div class="sm-year"><span data-year>2018</span></div>
+      <div class="story-nav"><span class="is-active" data-nav="0">2018</span><span data-nav="1">Ремесло</span><span data-nav="2">Сегодня</span></div>
+    </div>
+
+    <div class="story-chapters s5 c8">
+      <article class="chapter" data-scene="0" data-year="2018">
+        <div class="chapter-img"><img src="media/story-wreath.webp" alt="Первый проданный венок, 2018" loading="lazy"></div>
+        <span class="eyebrow">Глава 01 · 2018</span>
+        <h2>Всё началось <em>с одного венка</em></h2>
+        <p>В 2018 году Нигина продала свой первый венок. Тогда она даже не думала, что это станет делом.</p>
+      </article>
+      <article class="chapter" data-scene="1" data-year="ремесло">
+        <div class="chapter-img"><video class="vid" muted loop playsinline preload="none" poster="media/craft.webp" data-src="media/craft.mp4" aria-label="Ручная работа: бархатный бант"></video></div>
+        <span class="eyebrow">Глава 02 · ремесло</span>
+        <h2>Бутафор <em>по образованию</em></h2>
+        <p>Бутафор — это человек, который создаёт декорации. Поэтому для нас декор — ремесло: эскиз, каркас, материалы, свет и монтаж, а не покупка готовых игрушек.</p>
+      </article>
+      <article class="chapter" data-scene="2" data-year="сегодня">
+        <div class="chapter-img chapter-talk"><video controls playsinline preload="none" poster="media/talk.webp" src="media/talk.mp4" aria-label="Видео-обращение Нигины Ахмедовой"></video></div>
+        <span class="eyebrow">Глава 03 · сегодня</span>
+        <h2>Праздник <em>для больших брендов</em></h2>
+        <p>Сегодня Landy Decor оформляет фасады, торговые залы и офисы. А опыт дизайнера интерьера помогает вписать декор в пространство, а не спорить с ним.</p>
+        <div class="sign">
+          <div><b>Нигина Ахмедова</b><span>Основательница Landy Decor и Landy School</span></div>
+          <button class="btn btn-line btn-sm talk-btn" type="button" data-talk>▶ Включить видео</button>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 6. КЛИЕНТЫ ============ -->
+<!-- Только те, чьи логотипы/вывески видны на фото декора: Korzinka, Golden House, Testo, Infinity, Oqtepa Lavash, Премьера, Ozmakon. -->
+<section class="clients sec tone-velvet" data-tone="velvet" aria-label="Клиенты">
+  <div class="grid"><span class="eyebrow s12 center">Нам доверяют праздник</span></div>
+  <div class="marquee m1"><div class="m-row">Korzinka <i>✦</i> Golden House <i>✦</i> Testo <i>✦</i> Infinity <i>✦</i> Korzinka <i>✦</i> Golden House <i>✦</i> Testo <i>✦</i> Infinity <i>✦</i></div></div>
+  <div class="marquee m2"><div class="m-row outline">Oqtepa Lavash <i>✦</i> Премьера <i>✦</i> Ozmakon <i>✦</i> Oqtepa Lavash <i>✦</i> Премьера <i>✦</i> Ozmakon <i>✦</i></div></div>
+  <div class="grid cases">
+    <article class="case s3 m3" data-r><img src="media/w-korzinka-cash.webp" alt="" loading="lazy"><div><b>Korzinka</b><span>Торговые залы, лестницы, кассы</span></div></article>
+    <article class="case s3 m3" data-r><img src="media/svc-facade.webp" alt="" loading="lazy"><div><b>Golden House</b><span>Фасад и входная группа</span></div></article>
+    <article class="case s3 m3" data-r><img src="media/w-testo.webp" alt="" loading="lazy"><div><b>Testo</b><span>Венки и оформление входа</span></div></article>
+    <article class="case s3 m3" data-r><img src="media/w-oqtepa-facade.webp" alt="" loading="lazy"><div><b>Oqtepa Lavash</b><span>Фасад и интерьер</span></div></article>
+  </div>
+</section>
+
+<!-- ============ 7. ЧТО ОФОРМЛЯЕМ: шесть панелей на 12 колонок, открытая — шире остальных ============ -->
+<section class="services sec" id="services" data-tone="ink">
+  <div class="grid sec-head">
+    <span class="eyebrow s12">Что оформляем</span>
+    <h2 class="s8">Шесть сцен, <em>один подход</em></h2>
+    <p class="s4 head-note">Наведите на панель или нажмите — она раскроется. Каждая сцена — свой сценарий света и декора.</p>
+  </div>
+  <div class="grid">
+    <div class="acc s12">
+      <article class="acc-item is-open" tabindex="0">
+        <img src="media/svc-facade.webp" alt="Световая арка у входа" loading="lazy">
+        <div class="acc-label"><b>01</b><span>Фасады и входы</span></div>
+        <div class="acc-body"><h3>Фасады и входные группы</h3><p>Световые арки, гирлянды и ели у входа — оформление, которое видно с дороги и работает как вывеска.</p><ul class="tags"><li>Световые арки</li><li>Ели у входа</li><li>Гирлянды на фасад</li></ul><a class="more" href="#contact" data-to="#contact" data-pick="Фасад">Обсудить такой проект →</a></div>
+      </article>
+      <article class="acc-item" tabindex="0">
+        <img src="media/svc-retail.webp" alt="Арт-объект — ёлка в тележке, Korzinka" loading="lazy">
+        <div class="acc-label"><b>02</b><span>Магазины</span></div>
+        <div class="acc-body"><h3>Магазины и торговые залы</h3><p>Ели, арт-объекты и фотозоны в фирменных цветах бренда — декор, который работает на продажи.</p><ul class="tags"><li>Арт-объекты</li><li>Фотозоны</li><li>Кассовые зоны</li></ul><a class="more" href="#contact" data-to="#contact" data-pick="Торговый зал">Обсудить такой проект →</a></div>
+      </article>
+      <article class="acc-item" tabindex="0">
+        <img src="media/svc-office.webp" alt="Новогоднее оформление ресепшн Премьера" loading="lazy">
+        <div class="acc-label"><b>03</b><span>Офисы</span></div>
+        <div class="acc-body"><h3>Офисы и ресепшн</h3><p>Сдержанный праздничный декор для зон, где встречают клиентов и партнёров.</p><ul class="tags"><li>Ресепшн</li><li>Композиции</li><li>Входная группа</li></ul><a class="more" href="#contact" data-to="#contact" data-pick="Офис">Обсудить такой проект →</a></div>
+      </article>
+      <article class="acc-item" tabindex="0">
+        <img src="media/svc-cafe.webp" alt="Новогодняя терраса кафе" loading="lazy">
+        <div class="acc-label"><b>04</b><span>Кафе</span></div>
+        <div class="acc-body"><h3>Кафе и рестораны</h3><p>Террасы, залы и барные стойки — атмосфера, ради которой гости возвращаются и снимают сторис.</p><ul class="tags"><li>Терраса</li><li>Барная стойка</li><li>Подвесной декор</li></ul><a class="more" href="#contact" data-to="#contact" data-pick="Кафе / ресторан">Обсудить такой проект →</a></div>
+      </article>
+      <article class="acc-item" tabindex="0">
+        <img src="media/svc-home.webp" alt="Новогодний вход в частный дом" loading="lazy">
+        <div class="acc-label"><b>05</b><span>Дома</span></div>
+        <div class="acc-body"><h3>Частные дома</h3><p>Входная группа, лестница, ёлка в гостиной — праздник, в который хочется возвращаться.</p><ul class="tags"><li>Ёлка</li><li>Лестница</li><li>Входная группа</li></ul><a class="more" href="#contact" data-to="#contact" data-pick="Частный дом">Обсудить такой проект →</a></div>
+      </article>
+      <article class="acc-item" tabindex="0">
+        <img src="media/svc-handmade.webp" alt="Авторская композиция у зеркала" loading="lazy">
+        <div class="acc-label"><b>06</b><span>Композиции</span></div>
+        <div class="acc-body"><h3>Авторские композиции</h3><p>Венки, настольные композиции и арт-объекты ручной работы под ваш интерьер или бренд.</p><ul class="tags"><li>Венки</li><li>Настольные композиции</li><li>Банты</li></ul><a class="more" href="#contact" data-to="#contact" data-pick="Событие">Обсудить такой проект →</a></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 8. ВЖИВУЮ: лента вертикальных роликов (карточка = 3 колонки), клик — на весь экран ============ -->
+<section class="live sec" id="live" data-tone="night">
+  <div class="grid sec-head">
+    <span class="eyebrow s12">Вживую</span>
+    <h2 class="s8">Как это <em>выглядит вживую</em></h2>
+    <div class="s4 head-note live-ctrl">
+      <p>Наведите — ролик оживёт. Нажмите — откроется на весь экран.</p>
+      <div class="arrows"><button type="button" class="arr" data-dir="-1" aria-label="Назад">←</button><button type="button" class="arr" data-dir="1" aria-label="Вперёд">→</button></div>
+    </div>
+  </div>
+  <div class="reel-row" data-lenis-prevent-horizontal>
+    <button class="reel" type="button" data-src="media/r-velvet.mp4"><img src="media/r-velvet.webp" alt="" loading="lazy"><video muted loop playsinline preload="none"></video><span class="reel-cap"><b>Бархат и бусины</b><i>Драпировка</i></span><span class="reel-play">▶</span></button>
+    <button class="reel" type="button" data-src="media/r-tree-bow.mp4"><img src="media/r-tree-bow.webp" alt="" loading="lazy"><video muted loop playsinline preload="none"></video><span class="reel-cap"><b>Ёлка с бархатным бантом</b><i>Ёлка</i></span><span class="reel-play">▶</span></button>
+    <button class="reel" type="button" data-src="media/r-bow.mp4"><img src="media/r-bow.webp" alt="" loading="lazy"><video muted loop playsinline preload="none"></video><span class="reel-cap"><b>Бант ручной работы</b><i>Мастерская</i></span><span class="reel-play">▶</span></button>
+    <button class="reel" type="button" data-src="media/r-balls.mp4"><img src="media/r-balls.webp" alt="" loading="lazy"><video muted loop playsinline preload="none"></video><span class="reel-cap"><b>Шар за шаром</b><i>Украшаем ёлку</i></span><span class="reel-play">▶</span></button>
+    <button class="reel" type="button" data-src="media/r-beads.mp4"><img src="media/r-beads.webp" alt="" loading="lazy"><video muted loop playsinline preload="none"></video><span class="reel-cap"><b>Гирлянда из бусин</b><i>Монтаж</i></span><span class="reel-play">▶</span></button>
+    <button class="reel" type="button" data-src="media/r-stairs.mp4"><img src="media/r-stairs.webp" alt="" loading="lazy"><video muted loop playsinline preload="none"></video><span class="reel-cap"><b>Банты на лестнице</b><i>Лестница</i></span><span class="reel-play">▶</span></button>
+    <button class="reel" type="button" data-src="media/r-gifts.mp4"><img src="media/r-gifts.webp" alt="" loading="lazy"><video muted loop playsinline preload="none"></video><span class="reel-cap"><b>Ёлка и подарки</b><i>Торговый зал</i></span><span class="reel-play">▶</span></button>
+    <button class="reel" type="button" data-src="media/r-oqtepa.mp4"><img src="media/r-oqtepa.webp" alt="" loading="lazy"><video muted loop playsinline preload="none"></video><span class="reel-cap"><b>Oqtepa Lavash</b><i>Зал и ёлка</i></span><span class="reel-play">▶</span></button>
+  </div>
+</section>
+
+<!-- ============ 9. ПРОЦЕСС: 3 шага по 4 колонки (видео одного проекта — Oqtepa Lavash) ============ -->
+<section class="process sec" id="process" data-tone="ink">
+  <div class="grid sec-head">
+    <span class="eyebrow s12">Процесс</span>
+    <h2 class="s8">Сначала идея. <em>Потом гирлянда.</em></h2>
+    <p class="s4 head-note">Три этапа — одна команда. Вы видите эскиз до начала работ и готовый праздник к нужной дате.</p>
+  </div>
+  <div class="grid steps">
+    <div class="step s4">
+      <div class="step-img" data-reveal-img><video class="vid" muted loop playsinline preload="none" poster="media/step-visit.webp" data-src="media/step-visit.mp4" aria-label="Нигина на объекте: осмотр зала и решение с гирляндой"></video><span class="step-num">01</span></div>
+      <h4>Выезд и эскиз</h4><p>Приезжаем на объект, делаем замеры, предлагаем концепцию и смету.</p><span class="step-out">Результат: эскиз и смета</span>
+    </div>
+    <div class="step s4">
+      <div class="step-img" data-reveal-img><video class="vid" muted loop playsinline preload="none" poster="media/step-build.webp" data-src="media/step-build.mp4" aria-label="Команда собирает ёлки и гирлянды"></video><span class="step-num">02</span></div>
+      <h4>Изготовление и сборка</h4><p>Собираем каркасы, композиции и арт-объекты, закупаем ели и свет.</p><span class="step-out">Результат: готовый декор под ваш объект</span>
+    </div>
+    <div class="step s4">
+      <div class="step-img" data-reveal-img><video class="vid" muted loop playsinline preload="none" poster="media/step-result.webp" data-src="media/step-result.mp4" aria-label="Готовое оформление зала: ёлка и гирлянды на перилах"></video><span class="step-num">03</span></div>
+      <h4>Монтаж и результат</h4><p>Монтируем в нерабочие часы и убираем всё после праздников.</p><span class="step-out">Результат: праздник в срок, без хлопот</span>
+    </div>
+    <div class="process-cta s12" data-r>
+      <p>Начнём с выезда на объект: замеры, идеи и смета.</p>
+      <a href="#contact" class="btn" data-to="#contact">Записаться на выезд</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 10. ДЕТАЛИ: бенто 6 + 3 + 3 ============ -->
+<section class="details sec" data-tone="pine">
+  <div class="grid sec-head">
+    <span class="eyebrow s12">Детали</span>
+    <h2 class="s8">Праздник <em>собирается из мелочей</em></h2>
+    <p class="s4 head-note">Фактуры, ручная работа и свет — то, из-за чего декор выглядит дорого, а не пёстро.</p>
+  </div>
+  <div class="grid det-grid">
+    <figure class="det s6" data-reveal-img><img src="media/d-balls.webp" alt="Шары и бархатные ленты на ёлке" loading="lazy">
+      <figcaption><span class="tag">01 · Фактуры</span><h4>Шары и ленты</h4><p>Матовое, глянец, бархат — палитра, в которой ёлка выглядит дорого.</p></figcaption></figure>
+    <figure class="det s3" data-reveal-img><video class="vid" muted loop playsinline preload="none" poster="media/d-bow.webp" data-src="media/d-bow.mp4" aria-label="Бархатный бант на ёлке"></video>
+      <figcaption><span class="tag">02 · Ручная работа</span><h4>Бархатные банты</h4><p>Акцент, который видно издалека.</p></figcaption></figure>
+    <figure class="det s3" data-reveal-img><img src="media/d-lights.webp" alt="Световой занавес из гирлянд в Infinity" loading="lazy">
+      <figcaption><span class="tag">03 · Свет</span><h4>Свет и гирлянды</h4><p>Праздник, который работает и вечером.</p></figcaption></figure>
+  </div>
+</section>
+
+<!-- ============ 11. ЗАЯВКА-КОНСТРУКТОР: шаги 7 колонок · карточка заявки 5 (с 8-й) ============ -->
+<section class="finale sec tone-velvet" id="contact" data-tone="velvet">
+  <div class="grid sec-head">
+    <span class="eyebrow s12">Следующий праздник</span>
+    <h2 class="s8">Соберите заявку — <em>мы придумаем праздник</em></h2>
+    <p class="s4 head-note">Три шага, 30 секунд. Предновогодние даты расходятся быстро — свяжемся в течение дня.</p>
+  </div>
+
+  <form class="grid cfg" id="leadForm" novalidate>
+    <div class="cfg-steps s7">
+      <fieldset>
+        <legend><b>01</b>Что оформляем</legend>
+        <div class="chips" data-group="space">
+          <label><input type="radio" name="space" value="Фасад" data-img="media/svc-facade.webp" checked><span>Фасад</span></label>
+          <label><input type="radio" name="space" value="Торговый зал" data-img="media/w-korzinka-hall.webp"><span>Торговый зал</span></label>
+          <label><input type="radio" name="space" value="Офис" data-img="media/svc-office.webp"><span>Офис</span></label>
+          <label><input type="radio" name="space" value="Кафе / ресторан" data-img="media/w-oqtepa-int.webp"><span>Кафе / ресторан</span></label>
+          <label><input type="radio" name="space" value="Частный дом" data-img="media/w-private.webp"><span>Частный дом</span></label>
+          <label><input type="radio" name="space" value="Событие" data-img="media/d-lights.webp"><span>Событие</span></label>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend><b>02</b>Что нужно</legend>
+        <div class="chips" data-group="items">
+          <label><input type="checkbox" name="items" value="Ёлка" checked><span>Ёлка</span></label>
+          <label><input type="checkbox" name="items" value="Гирлянды и свет"><span>Гирлянды и свет</span></label>
+          <label><input type="checkbox" name="items" value="Световая арка"><span>Световая арка</span></label>
+          <label><input type="checkbox" name="items" value="Фотозона"><span>Фотозона</span></label>
+          <label><input type="checkbox" name="items" value="Венки и банты"><span>Венки и банты</span></label>
+          <label><input type="checkbox" name="items" value="Демонтаж"><span>Демонтаж после праздников</span></label>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend><b>03</b>Когда монтаж</legend>
+        <div class="chips" data-group="when">
+          <label><input type="radio" name="when" value="Ноябрь"><span>Ноябрь</span></label>
+          <label><input type="radio" name="when" value="1–15 декабря" checked><span>1–15 декабря</span></label>
+          <label><input type="radio" name="when" value="16–31 декабря"><span>16–31 декабря</span></label>
+          <label><input type="radio" name="when" value="Пока не знаю"><span>Пока не знаю</span></label>
+        </div>
+      </fieldset>
+      <div class="faq">
+        <details><summary>Когда заказывать новогоднее оформление?</summary><p>Чем раньше, тем лучше: на изготовление нужно время, а даты монтажа перед Новым годом расходятся быстро.</p></details>
+        <details><summary>Монтаж и демонтаж входят в работу?</summary><p>Да, работаем под ключ: от эскиза до уборки после праздников.</p></details>
+        <details><summary>Берёте небольшие заказы для дома?</summary><p>Да: можно заказать одну ёлку, венок на дверь или оформление лестницы.</p></details>
+      </div>
+    </div>
+
+    <aside class="cfg-card s5 c8">
+      <div class="lead-ok" id="leadOk"><b>Заявка отправлена</b><span>Свяжемся с вами в течение дня</span></div>
+      <div class="cfg-img"><img src="media/svc-facade.webp" alt="" data-cfg-img></div>
+      <dl class="cfg-sum">
+        <div><dt>Объект</dt><dd data-sum="space">Фасад</dd></div>
+        <div><dt>Нужно</dt><dd data-sum="items">Ёлка</dd></div>
+        <div><dt>Монтаж</dt><dd data-sum="when">1–15 декабря</dd></div>
+      </dl>
+      <label for="fname">Имя</label>
+      <input type="text" id="fname" placeholder="Как к вам обращаться" autocomplete="name" required>
+      <label for="fphone">Телефон / Telegram</label>
+      <input type="text" id="fphone" placeholder="+998 __ ___ __ __ или @username" autocomplete="tel" required>
+      <button type="submit" class="btn">Отправить заявку</button>
+      <div class="cfg-links">
+        <a href="https://t.me/NiginaAhmedova" target="_blank" rel="noopener">Telegram · @NiginaAhmedova</a>
+        <a href="https://www.instagram.com/design_landy/" target="_blank" rel="noopener">Instagram · @design_landy</a>
+      </div>
+    </aside>
+  </form>
+</section>
+
+</main>
+
+<footer class="ftr" data-tone="velvet">
+  <div class="grid">
+    <div class="ftr-big s12" aria-hidden="true">LANDY·DECOR</div>
+    <div class="s3 m3"><h5>Навигация</h5><a href="#works" data-to="#works">Работы</a><a href="#story" data-to="#story">История</a><a href="#services" data-to="#services">Что оформляем</a><a href="#process" data-to="#process">Процесс</a></div>
+    <div class="s3 m3"><h5>Контакты</h5><a href="https://t.me/NiginaAhmedova" target="_blank" rel="noopener">Telegram</a><a href="https://www.instagram.com/design_landy/" target="_blank" rel="noopener">Instagram</a><a href="https://www.youtube.com/@LandyGroup_com" target="_blank" rel="noopener">YouTube</a></div>
+    <div class="s3 m3"><h5>Landy Group</h5><a href="../interior-landing/index.html">Landy Interior</a><a href="../school-landing/index.html">Landy School</a></div>
+    <div class="s3 m3 ftr-season"><h5>Сезон 2026/27</h5><p>Принимаем заявки на новогоднее оформление в Ташкенте.</p><a href="#contact" class="btn btn-sm" data-to="#contact">Обсудить проект</a></div>
+    <span class="s6 ftr-copy">© 2026 Landy Decor · часть Landy Group</span>
+    <span class="s6 ftr-copy right">Ташкент · с 2018</span>
+  </div>
+</footer>
+
+<!-- Ролик на весь экран -->
+<div class="lb" id="lb" hidden>
+  <button class="lb-close" type="button" aria-label="Закрыть">✕</button>
+  <video controls playsinline></video>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+<script src="js/decor.js"></script>
+</body>
+</html>
