@@ -277,7 +277,8 @@ html:not(.motion) .sm-img:not(.is-active){display:none;}
 /* сцена с видео Нигины: видео во весь рост, по бокам — размытый кадр */
 /* сцена с Нигиной: по центру видео 9:16, по бокам — его же размытая копия (canvas 18×24, растянутый браузером) */
 .sm-talk{background:var(--bg);}
-.sm-talk .talk-amb{position:absolute;inset:-4%;width:108%;height:108%;opacity:.9;}
+/* растянутый маленький canvas в Firefox даёт квадраты — поэтому поверх ещё настоящее размытие; края уведены за рамку */
+.sm-talk .talk-amb{position:absolute;inset:-12%;width:124%;height:124%;opacity:.9;filter:blur(28px) saturate(1.15);}
 .sm-talk .talk-vid{left:50%;right:auto;width:auto;height:100%;aspect-ratio:9/16;object-fit:cover;transform:translateX(-50%);border-radius:0;box-shadow:0 0 60px rgba(15,12,9,.5);}
 /* кнопка звука: видна, когда на экране сцена с Нигиной; на компьютере ярче при наведении на кадр */
 .talk-sound{position:absolute;z-index:5;left:50%;bottom:clamp(20px,4vh,36px);transform:translateX(-50%);display:flex;align-items:center;gap:10px;padding:12px 20px 12px 14px;border-radius:100px;background:rgba(15,12,9,.6);font-size:13px;font-weight:600;letter-spacing:.04em;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .4s,background .3s;}
@@ -295,7 +296,8 @@ html:not(.motion) .sm-img:not(.is-active){display:none;}
 .story-nav{position:absolute;z-index:4;top:var(--gut);left:var(--gut);display:flex;gap:6px;}
 .story-nav span{padding:8px 14px;border-radius:100px;font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);background:rgba(15,12,9,.62);transition:background .4s,color .4s;}
 .story-nav span.is-active{background:var(--accent);color:var(--bg);}
-.chapter{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:9vh 0;}
+/* главы ниже экрана (62vh), чтобы между уходящим текстом и следующей главой не было пустой половины экрана */
+.chapter{min-height:62vh;display:flex;flex-direction:column;justify-content:center;padding:4vh 0;}
 /* последняя глава: текст прилипает на той же высоте, что и сцена (12vh, 76vh), и стоит по центру ещё 60vh прокрутки;
    уходят текст и сцена вместе — блок заканчивается одновременно */
 .chapter.ch-hold{display:block;min-height:0;height:calc(76vh + 60vh);padding:0;}

@@ -123,23 +123,29 @@
   const scenes = document.querySelectorAll('.sm-img');
   const yearEl = document.querySelector('[data-year]');
   const navItems = document.querySelectorAll('.story-nav span');
-  document.querySelectorAll('.chapter').forEach(ch => {
-    ScrollTrigger.create({
-      trigger: ch, start: 'top 55%', end: 'bottom 55%',
-      onToggle: self => {
-        if (!self.isActive) return;
-        const i = ch.dataset.scene;
-        scenes.forEach(s => s.classList.toggle('is-active', s.dataset.scene === i));
-        navItems.forEach(n => n.classList.toggle('is-active', n.dataset.nav === i));
-        window.__talkScene && window.__talkScene(i === '2');
-        if (yearEl.textContent !== ch.dataset.year) {
-          gsap.timeline()
-            .to(yearEl, { yPercent: -110, duration: 0.35, ease: 'power2.in' })
-            .add(() => { yearEl.textContent = ch.dataset.year; })
-            .fromTo(yearEl, { yPercent: 110 }, { yPercent: 0, duration: 0.6, ease: 'expo.out' });
-        }
-      }
-    });
+  const chapters = document.querySelectorAll('.chapter');
+  // Активная сцена = та, чей кадр открыт больше чем наполовину. Год, кнопки глав и видео Нигины переключаются
+  // в этот же момент — одинаково при прокрутке вниз и вверх.
+  const wipe = [1, 0, 0];   // насколько открыт каждый кадр (0…1); первый открыт всегда
+  let current = -1;
+  const applyScene = () => {
+    let i = 0;
+    wipe.forEach((p, k) => { if (p >= 0.5) i = k; });
+    if (i === current) return;
+    current = i;
+    const ch = chapters[i];
+    scenes.forEach(s => s.classList.toggle('is-active', +s.dataset.scene === i));
+    navItems.forEach(n => n.classList.toggle('is-active', +n.dataset.nav === i));
+    window.__talkScene && window.__talkScene(i === 2);
+    if (yearEl.textContent !== ch.dataset.year) {
+      gsap.killTweensOf(yearEl);
+      gsap.timeline()
+        .to(yearEl, { yPercent: -110, duration: 0.25, ease: 'power2.in' })
+        .add(() => { yearEl.textContent = ch.dataset.year; })
+        .fromTo(yearEl, { yPercent: 110 }, { yPercent: 0, duration: 0.5, ease: 'expo.out' });
+    }
+  };
+  chapters.forEach(ch => {
     gsap.fromTo(ch.querySelectorAll('.eyebrow, h2, p, .sign'), { opacity: 0, y: 50 }, { opacity: 1, y: 0, stagger: 0.1, duration: 1.1, ease: 'expo.out', scrollTrigger: { trigger: ch, start: 'top 70%' } });
   });
   // Смена кадра привязана к прокрутке: верх главы N проходит от низа сцены (88% экрана) до её верха (12%) —
@@ -157,7 +163,8 @@
     // когда текст останавливается рядом с видео
     const off = () => ch.classList.contains('ch-hold') ? 0 : Math.round(eb.getBoundingClientRect().top - ch.getBoundingClientRect().top - (gsap.getProperty(eb, 'y') || 0));
     const st = { trigger: ch, start: () => `top+=${off()} ${top() + media.offsetHeight}px`, end: () => `top+=${off()} ${top()}px`, scrub: true, invalidateOnRefresh: true };
-    gsap.fromTo(scene, { clipPath: 'inset(100% 0% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', ease: 'none', scrollTrigger: st });
+    gsap.fromTo(scene, { clipPath: 'inset(100% 0% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', ease: 'none',
+      scrollTrigger: { ...st, onUpdate: self => { wipe[i] = self.progress; applyScene(); }, onRefresh: self => { wipe[i] = self.progress; applyScene(); } } });
     const inner = scene.querySelector(':scope > img:not(.talk-bg), :scope > video:not(.talk-vid)');   // видео Нигины центровано своим transform — его не трогаем
     if (inner) gsap.fromTo(inner, { scale: 1.15 }, { scale: 1, ease: 'none', scrollTrigger: { ...st } });
     if (prev) gsap.fromTo(prev, { yPercent: 0 }, { yPercent: -12, ease: 'none', scrollTrigger: { ...st } });
