@@ -146,15 +146,20 @@ body[data-tone="velvet"] .lights{opacity:1;}
   -webkit-mask-image:linear-gradient(180deg,#000 72%,transparent 100%);mask-image:linear-gradient(180deg,#000 72%,transparent 100%);}
 .intro-frame > img,.intro-frame > video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
 .intro-frame > video{z-index:1;}
+/* затемнение там, где текст: шапка и подпись сверху, заголовок с кнопками слева внизу, строка клиентов внизу */
 .intro-shade{position:absolute;inset:0;z-index:2;
-  background:linear-gradient(180deg,rgba(15,12,9,.68) 0%,rgba(15,12,9,.3) 35%,rgba(15,12,9,.5) 65%,rgba(15,12,9,.9) 100%),
-             linear-gradient(90deg,rgba(15,12,9,.6) 0%,rgba(15,12,9,.12) 60%,rgba(15,12,9,.3) 100%);}
+  background:radial-gradient(ellipse 65% 55% at 18% 78%, rgba(15,12,9,.72) 0%, rgba(15,12,9,.35) 55%, transparent 80%),
+             linear-gradient(180deg,rgba(15,12,9,.8) 0%,rgba(15,12,9,.35) 22%,rgba(15,12,9,.25) 45%,rgba(15,12,9,.6) 70%,rgba(15,12,9,.95) 100%),
+             linear-gradient(90deg,rgba(15,12,9,.7) 0%,rgba(15,12,9,.2) 60%,rgba(15,12,9,.35) 100%);}
+@media(max-width:900px){
+  .intro-shade{background:linear-gradient(180deg,rgba(15,12,9,.75) 0%,rgba(15,12,9,.3) 18%,rgba(15,12,9,.45) 32%,rgba(15,12,9,.82) 46%,rgba(15,12,9,.9) 70%,rgba(15,12,9,.97) 100%);}
+}
 .intro-meta{position:absolute;left:0;right:0;top:96px;z-index:5;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);}
 .intro-caption{position:absolute;z-index:5;left:0;right:0;bottom:28px;}
 .hero-main{align-items:end;}
 .intro-caption h1{font-size:clamp(36px,4.9vw,82px);}
 .hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:34px;}
-.hero-card{background:rgba(15,12,9,.7);border-radius:var(--r);padding:22px;}
+.hero-card{background:rgba(15,12,9,.84);border-radius:var(--r);padding:22px;}
 .intro-sub{font-size:15px;color:var(--dim);margin-bottom:18px;}
 .hero-thumbs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:18px;}
 .hero-thumbs a{display:block;aspect-ratio:1;border-radius:10px;overflow:hidden;}
