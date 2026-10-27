@@ -411,22 +411,10 @@ details p{color:var(--dim);font-size:15px;margin-top:12px;}
 .ftr-season p{color:var(--dim);font-size:14px;margin-bottom:16px;}
 .ftr-copy{font-size:13px;color:var(--dim2);margin-top:20px;}
 
-/* ===== Подписи поверх фото и видео: размытое «матовое стекло» под текстом для читаемости ===== */
-:root{--cap-bg:rgba(15,12,9,.28);--cap-in:10px;}
-.h-card figcaption,.case figcaption,.det figcaption,.reel-cap,.acc-body,.acc-label,.sm-year,.cine-cap p,.cine-cap span{
-  -webkit-backdrop-filter:blur(14px) saturate(1.1);backdrop-filter:blur(14px) saturate(1.1);}
-.h-card figcaption,.case figcaption,.det figcaption{left:var(--cap-in);right:var(--cap-in);bottom:var(--cap-in);border-radius:12px;background:var(--cap-bg);padding:12px 16px;}
-.h-card figcaption{flex-wrap:wrap;row-gap:2px;}
-.reel-cap{left:var(--cap-in);right:var(--cap-in);bottom:var(--cap-in);padding:12px 14px;border-radius:12px;background:var(--cap-bg);}
-.acc-body{left:var(--cap-in);right:auto;bottom:var(--cap-in);max-width:min(560px,calc(100% - 2 * var(--cap-in)));border-radius:14px;background:var(--cap-bg);padding:clamp(18px,2vw,30px);}
-.acc-label{left:var(--cap-in);bottom:var(--cap-in);padding:16px 12px;border-radius:12px;background:var(--cap-bg);}
-.sm-year{padding:4px 18px 10px;border-radius:14px;background:var(--cap-bg);}
-.cine-cap p,.cine-cap span{justify-self:start;padding:12px 16px;border-radius:12px;background:var(--cap-bg);}
-.cine-cap span{justify-self:end;}
-@media(max-width:900px){
-  .acc-label{left:0;bottom:0;right:0;border-radius:0;background:none;-webkit-backdrop-filter:none;backdrop-filter:none;}   /* закрытая панель на телефоне — уже тёмная полоса */
-  .cine-cap span{justify-self:start;}
-}
+/* ===== Подписи поверх фото и видео: только тёмный градиент снизу кадра, без плашек ===== */
+.h-img::after,.reel::after{background:linear-gradient(180deg,transparent 40%,rgba(15,12,9,.55) 68%,rgba(15,12,9,.92) 100%);}
+.story-media::after{content:"";position:absolute;left:0;right:0;bottom:0;height:45%;z-index:3;pointer-events:none;background:linear-gradient(180deg,transparent,rgba(15,12,9,.8));}
+.cine-shade{background:linear-gradient(180deg,rgba(15,12,9,.35),rgba(15,12,9,.1) 40%,rgba(15,12,9,.6) 70%,rgba(15,12,9,.92));}
 
 /* ===== Анимации (классы, которые ставит decor.js) ===== */
 .wm{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.1em;margin-bottom:-.1em;}
