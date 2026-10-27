@@ -54,8 +54,8 @@
   gsap.fromTo('.intro-caption .eyebrow, .intro-caption h1, .hero-actions, .hero-card, .hero-bar', { opacity: 0, y: 60 }, { opacity: 1, y: 0, duration: 1.4, ease: 'expo.out', stagger: 0.12, delay: LOADER_END + 0.2 });
   gsap.fromTo('.hero-thumbs a', { opacity: 0, scale: 0.85 }, { opacity: 1, scale: 1, duration: 1, ease: 'expo.out', stagger: 0.08, delay: LOADER_END + 0.8 });
   gsap.fromTo('.intro-meta', { opacity: 0 }, { opacity: 1, duration: 1, delay: LOADER_END + 0.5 });
-  // уход первого экрана: видео медленно отъезжает, текст поднимается
-  gsap.to('.intro-frame', { yPercent: 18, ease: 'none', scrollTrigger: { trigger: '.intro', start: 'top top', end: 'bottom top', scrub: true } });
+  // уход первого экрана: текст поднимается и гаснет. Видео не сдвигаем — иначе его мягкий нижний край
+  // обрезается границей экрана и получается резкая линия перед манифестом.
   gsap.to('.intro-caption, .intro-meta', { yPercent: -30, opacity: 0, ease: 'none', scrollTrigger: { trigger: '.intro', start: '30% top', end: 'bottom top', scrub: true } });
 
   // ---------- Заголовки секций: слова поднимаются из-под маски ----------
