@@ -87,7 +87,8 @@
     }
   });
   cards.forEach(card => {
-    gsap.fromTo(card.querySelector('.h-img > *'), { xPercent: 7 }, { xPercent: -7, ease: 'none', scrollTrigger: { trigger: card, containerAnimation: hTween, start: 'left right', end: 'right left', scrub: true } });
+    // ±5% от ширины фото (124% карточки) = ±6.2% карточки — меньше запаса в 12%, края фото не видны
+    gsap.fromTo(card.querySelector('.h-img > *'), { xPercent: 5 }, { xPercent: -5, ease: 'none', scrollTrigger: { trigger: card, containerAnimation: hTween, start: 'left right', end: 'right left', scrub: true } });
     gsap.fromTo(card, { scale: 0.86, opacity: 0.4 }, { scale: 1, opacity: 1, ease: 'none', scrollTrigger: { trigger: card, containerAnimation: hTween, start: 'left 100%', end: 'left 55%', scrub: true } });
   });
 
