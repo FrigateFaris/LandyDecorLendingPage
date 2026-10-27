@@ -15,7 +15,7 @@
   initAccordion();
   initReels();
   initTalk();
-  initConfigurator();
+  initForm();
   initGridToggle();
   if (!hasGsap || reduce) { initPlainLinks(); return; }
 
@@ -131,15 +131,6 @@
     gsap.fromTo(ch.querySelectorAll('.eyebrow, h2, p, .sign'), { opacity: 0, y: 50 }, { opacity: 1, y: 0, stagger: 0.1, duration: 1.1, ease: 'expo.out', scrollTrigger: { trigger: ch, start: 'top 70%' } });
   });
 
-  // ---------- 6. Клиенты: строки едут от прокрутки и наклоняются от скорости ----------
-  gsap.fromTo('.m1 .m-row', { xPercent: 0 }, { xPercent: -30, ease: 'none', scrollTrigger: { trigger: '.clients', start: 'top bottom', end: 'bottom top', scrub: 0.6 } });
-  gsap.fromTo('.m2 .m-row', { xPercent: -30 }, { xPercent: 0, ease: 'none', scrollTrigger: { trigger: '.clients', start: 'top bottom', end: 'bottom top', scrub: 0.6 } });
-  const rows = document.querySelectorAll('.m-row');
-  const skew = gsap.quickSetter(rows, 'skewX', 'deg');
-  let target = 0, cur = 0, active = false;
-  ScrollTrigger.create({ trigger: '.clients', start: 'top bottom', end: 'bottom top', onToggle: s => { active = s.isActive; }, onUpdate: s => { target = gsap.utils.clamp(-10, 10, -s.getVelocity() / 250); } });
-  gsap.ticker.add(() => { if (!active && Math.abs(cur) < 0.01) return; target *= 0.9; cur += (target - cur) * 0.12; skew(cur); });
-
   // ---------- 7. Панели услуг: выезжают по очереди ----------
   gsap.fromTo('.acc-item', { opacity: 0, y: 80 }, { opacity: 1, y: 0, duration: 1.2, ease: 'expo.out', stagger: 0.08, scrollTrigger: { trigger: '.acc', start: 'top 85%', once: true } });
 
@@ -155,8 +146,8 @@
   gsap.utils.toArray('.step-num').forEach(n => gsap.fromTo(n, { yPercent: 60, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 1.2, ease: 'expo.out', delay: 0.5, scrollTrigger: { trigger: n, start: 'top 90%', once: true } }));
 
   // ---------- 11. Заявка ----------
-  gsap.fromTo('.cfg-steps fieldset, .faq details', { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 1, ease: 'expo.out', stagger: 0.08, scrollTrigger: { trigger: '.cfg', start: 'top 75%', once: true } });
-  gsap.fromTo('.cfg-card', { opacity: 0, y: 60 }, { opacity: 1, y: 0, duration: 1.2, ease: 'expo.out', scrollTrigger: { trigger: '.cfg', start: 'top 75%', once: true } });
+  gsap.fromTo('.faq details, .contact-cards a', { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 1, ease: 'expo.out', stagger: 0.08, scrollTrigger: { trigger: '.fin', start: 'top 75%', once: true } });
+  gsap.fromTo('.lead', { opacity: 0, y: 60 }, { opacity: 1, y: 0, duration: 1.2, ease: 'expo.out', scrollTrigger: { trigger: '.fin', start: 'top 75%', once: true } });
 
   // ---------- Подвал: LANDY·DECOR по буквам ----------
   const big = document.querySelector('.ftr-big');
@@ -335,31 +326,16 @@ function initTalk() {
   document.querySelectorAll('[data-talk]').forEach(b => b.addEventListener('click', playTalk));
 }
 
-// ---------- Заявка-конструктор → тот же Google Apps Script, что и у Landy School ----------
-function initConfigurator() {
+// ---------- Заявка → тот же Google Apps Script, что и у Landy School ----------
+function initForm() {
   const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwOMyCZAZD522SU1C0Ru19f2DAdRa_EFn78YkiFJ8kUB-JDhqaNykBwId73Ztb5WXfE/exec';
   const form = document.getElementById('leadForm');
   if (!form) return;
   const ok = document.getElementById('leadOk');
-  const img = form.querySelector('[data-cfg-img]');
-  const val = () => ({
-    space: form.querySelector('input[name="space"]:checked')?.value || '—',
-    items: [...form.querySelectorAll('input[name="items"]:checked')].map(i => i.value).join(', ') || '—',
-    when: form.querySelector('input[name="when"]:checked')?.value || '—'
-  });
-  const render = changed => {
-    const v = val();
-    Object.entries(v).forEach(([k, t]) => { const dd = form.querySelector(`[data-sum="${k}"]`); if (dd) dd.textContent = t; });
-    if (changed && changed.name === 'space' && changed.dataset.img && !img.src.endsWith(changed.dataset.img)) {
-      img.classList.add('swap');
-      setTimeout(() => { img.src = changed.dataset.img; img.onload = () => img.classList.remove('swap'); }, 250);
-    }
-  };
-  form.addEventListener('change', e => render(e.target));
-  // «Обсудить такой проект» в панелях услуг сразу выбирает нужный объект
+  const note = form.querySelector('#fnote');
+  // «Обсудить такой проект» в панелях услуг подставляет объект в поле «Объект и сроки»
   document.querySelectorAll('[data-pick]').forEach(a => a.addEventListener('click', () => {
-    const r = form.querySelector(`input[name="space"][value="${a.dataset.pick}"]`);
-    if (r) { r.checked = true; render(r); }
+    if (!note.value.trim()) note.value = `Интересует: ${a.dataset.pick}`;
   }));
   form.addEventListener('submit', e => {
     e.preventDefault();
@@ -367,13 +343,13 @@ function initConfigurator() {
     let bad = false;
     [name, phone].forEach(i => { const empty = !i.value.trim(); i.classList.toggle('err', empty); bad = bad || empty; });
     if (bad) { (name.value.trim() ? phone : name).focus(); return; }
-    const btn = form.querySelector('button[type="submit"]'), original = btn.textContent, v = val();
+    const btn = form.querySelector('button[type="submit"]'), original = btn.textContent;
     btn.disabled = true; btn.textContent = 'Отправляем...';
     fetch(SCRIPT_URL, {
       method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ fname: name.value, fphone: phone.value, format: `${v.space} · ${v.items} · ${v.when}`, space: v.space, items: v.items, when: v.when, source: 'Landy Decor' })
+      body: JSON.stringify({ fname: name.value, fphone: phone.value, format: note.value.trim() || '—', source: 'Landy Decor' })
     })
-      .then(() => { ok.classList.add('show'); name.value = ''; phone.value = ''; })
+      .then(() => { ok.classList.add('show'); form.reset(); })
       .catch(() => { btn.textContent = 'Ошибка. Попробуйте ещё раз'; })
       .finally(() => setTimeout(() => { btn.disabled = false; btn.textContent = original; }, 2600));
   });
