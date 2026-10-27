@@ -127,7 +127,7 @@
   // Активная сцена = та, чей кадр открыт больше чем наполовину. Год, кнопки глав и видео Нигины переключаются
   // в этот же момент — одинаково при прокрутке вниз и вверх.
   const wipe = [1, 0, 0];   // насколько открыт каждый кадр (0…1); первый открыт всегда
-  let current = -1;
+  let current = -1, yearTl = null;
   const applyScene = () => {
     // видео Нигины с размытыми боками запускается (без звука), как только его кадр начал выезжать — чтобы не выезжал чёрный блок
     window.__talkWarm && window.__talkWarm(wipe[2] > 0);
@@ -139,13 +139,15 @@
     scenes.forEach(s => s.classList.toggle('is-active', +s.dataset.scene === i));
     navItems.forEach(n => n.classList.toggle('is-active', +n.dataset.nav === i));
     window.__talkScene && window.__talkScene(i === 2);
+    // прошлую смену года обрываем целиком (вместе с её подменой текста) — иначе при быстрой прокрутке туда-обратно
+    // она дописывала старый год поверх нового
+    if (yearTl) { yearTl.kill(); yearTl = null; }
     if (yearEl.textContent !== ch.dataset.year) {
-      gsap.killTweensOf(yearEl);
-      gsap.timeline()
+      yearTl = gsap.timeline()
         .to(yearEl, { yPercent: -110, duration: 0.25, ease: 'power2.in' })
         .add(() => { yearEl.textContent = ch.dataset.year; })
         .fromTo(yearEl, { yPercent: 110 }, { yPercent: 0, duration: 0.5, ease: 'expo.out' });
-    }
+    } else gsap.set(yearEl, { yPercent: 0 });
   };
   chapters.forEach(ch => {
     gsap.fromTo(ch.querySelectorAll('.eyebrow, h2, p, .sign'), { opacity: 0, y: 50 }, { opacity: 1, y: 0, stagger: 0.1, duration: 1.1, ease: 'expo.out', scrollTrigger: { trigger: ch, start: 'top 70%' } });

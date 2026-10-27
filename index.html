@@ -197,19 +197,24 @@
     </div>
 
     <div class="story-chapters s5 c8">
-      <article class="chapter" data-scene="0" data-year="2018">
-        <div class="chapter-img"><img src="media/story-wreath.webp" alt="Первый проданный венок, 2018" loading="lazy"></div>
-        <span class="eyebrow">Глава 01 · 2018</span>
-        <h2>Всё началось <em>с одного венка</em></h2>
-        <p>В 2018 году Нигина продала свой первый венок. Тогда она даже не думала, что это станет делом.</p>
+      <!-- Каждая глава «держится» рядом с кадром: внутренний блок прилипает на той же высоте, что и сцена,
+           и стоит на месте, пока читаете; потом уезжает, а следующая глава вместе с новым кадром поднимается снизу -->
+      <article class="chapter ch-hold" data-scene="0" data-year="2018">
+        <div class="ch-inner">
+          <div class="chapter-img"><img src="media/story-wreath.webp" alt="Первый проданный венок, 2018" loading="lazy"></div>
+          <span class="eyebrow">Глава 01 · 2018</span>
+          <h2>Всё началось <em>с одного венка</em></h2>
+          <p>В 2018 году Нигина продала свой первый венок. Тогда она даже не думала, что это станет делом.</p>
+        </div>
       </article>
-      <article class="chapter" data-scene="1" data-year="ремесло">
-        <div class="chapter-img"><video class="vid" muted loop playsinline preload="none" poster="media/craft.webp" data-src="media/craft.mp4" aria-label="Ручная работа: бархатный бант"></video></div>
-        <span class="eyebrow">Глава 02 · ремесло</span>
-        <h2>Бутафор <em>по образованию</em></h2>
-        <p>Бутафор — это человек, который создаёт декорации. Поэтому для нас декор — ремесло: эскиз, каркас, материалы, свет и монтаж, а не покупка готовых игрушек.</p>
+      <article class="chapter ch-hold" data-scene="1" data-year="ремесло">
+        <div class="ch-inner">
+          <div class="chapter-img"><video class="vid" muted loop playsinline preload="none" poster="media/craft.webp" data-src="media/craft.mp4" aria-label="Ручная работа: бархатный бант"></video></div>
+          <span class="eyebrow">Глава 02 · ремесло</span>
+          <h2>Бутафор <em>по образованию</em></h2>
+          <p>Бутафор — это человек, который создаёт декорации. Поэтому для нас декор — ремесло: эскиз, каркас, материалы, свет и монтаж, а не покупка готовых игрушек.</p>
+        </div>
       </article>
-      <!-- Последняя глава «держится» по центру рядом с видео: внутренний блок прилипает на той же высоте, что и сцена -->
       <article class="chapter ch-hold" data-scene="2" data-year="сегодня">
         <div class="ch-inner">
           <div class="chapter-img chapter-talk"><video class="vid" muted loop playsinline controls preload="none" poster="media/talk.webp" data-src="media/talk.mp4" aria-label="Видео-обращение Нигины Ахмедовой"></video></div>
