@@ -302,7 +302,7 @@ html:not(.motion) .sm-img:not(.is-active){display:none;}
    Расстояние между главами = 76vh + --hold, поэтому смены кадров никогда не накладываются. */
 .story{--hold:20vh;}   /* короткая остановка: 65vh показалось долгой паузой */
 .chapter.ch-hold{display:block;min-height:0;height:calc(76vh + var(--hold));padding:0;}
-.ch-inner{position:sticky;top:12vh;height:76vh;display:flex;flex-direction:column;justify-content:flex-start;}   /* текст вровень с верхом кадра — край кадра идёт ровно со строкой «Глава N» */
+.ch-inner{position:sticky;top:12vh;height:76vh;display:flex;flex-direction:column;justify-content:center;}   /* текст стоит по центру относительно кадра */
 .chapter h2{font-size:clamp(34px,3.8vw,60px);margin-bottom:24px;}
 .chapter p{color:var(--dim);font-size:clamp(16px,1.2vw,19px);}
 .chapter-img{display:none;}

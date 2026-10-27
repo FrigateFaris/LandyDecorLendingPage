@@ -184,8 +184,9 @@
     // смещение строки «Глава N» от верха главы; у прилипающей главы — по раскладке внутри её блока (липкость не влияет)
     const off = () => ch.classList.contains('ch-hold') ? eb.offsetTop
       : Math.round(eb.getBoundingClientRect().top - ch.getBoundingClientRect().top - (gsap.getProperty(eb, 'y') || 0));
-    // кадр начинает выезжать, когда «Глава N» подходит к низу сцены, и открыт полностью, когда строка доходит до верха сцены
-    const st = { trigger: ch, start: () => `top+=${off()} ${top() + media.offsetHeight}px`, end: () => `top+=${off()} ${top()}px`, scrub: true, invalidateOnRefresh: true };
+    // кадр начинает выезжать, когда «Глава N» подходит к низу сцены, и открыт полностью, когда текст главы
+    // встаёт по центру рядом с ним (блок главы прилип к верху сцены) — старт и финиш вместе с текстом
+    const st = { trigger: ch, start: () => `top+=${off()} ${top() + media.offsetHeight}px`, end: () => `top ${top()}px`, scrub: true, invalidateOnRefresh: true };
     gsap.fromTo(scene, { clipPath: 'inset(100% 0% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', ease: 'none',
       scrollTrigger: { ...st, onUpdate: self => { wipe[i] = self.progress; applyScene(); }, onRefresh: self => { wipe[i] = self.progress; applyScene(); } } });
     const inner = scene.querySelector(':scope > img:not(.talk-bg), :scope > video:not(.talk-vid)');   // видео Нигины центровано своим transform — его не трогаем
