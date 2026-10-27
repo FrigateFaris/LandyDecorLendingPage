@@ -324,14 +324,33 @@ html:not(.motion) .sm-img:not(.is-active){display:none;}
   .talk-btn{display:none;}
 }
 
-/* ===== 6. Клиенты: карточки проектов ===== */
-.cases{row-gap:var(--gut);}
-.case{position:relative;aspect-ratio:4/5;border-radius:var(--r);overflow:hidden;}
-.case img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 1.4s var(--ease);}
-.case:hover img{transform:scale(1.05);}
-.case figcaption{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:clamp(16px,1.8vw,24px);background:linear-gradient(180deg,transparent,rgba(15,12,9,.88));}
-.case b{display:block;font-size:clamp(20px,1.7vw,26px);font-weight:300;}
-.case span{display:block;margin-top:4px;font-size:13px;color:var(--dim);}
+/* ===== 6. Клиенты: бенто (большая, высокая, малые плитки + плитка-призыв) ===== */
+.bento{grid-auto-rows:clamp(200px,27vh,300px);row-gap:var(--gut);}
+.b-big{grid-column:1 / span 6;grid-row:span 2;}
+.b-tall{grid-column:7 / span 3;grid-row:span 2;}
+.b-sm{grid-column:10 / span 3;}
+.b-row{grid-column:span 4;}
+.case{position:relative;border-radius:var(--r);overflow:hidden;clip-path:inset(0 round var(--r));background:var(--bg2);}
+/* фото выше плитки на 16%: decor.js двигает его при прокрутке (параллакс), края не видны */
+.case-img{position:absolute;left:0;right:0;top:-8%;height:116%;}
+.case-img img{width:100%;height:100%;object-fit:cover;transition:scale 1.2s var(--ease);}
+.case:hover .case-img img{scale:1.06;}
+/* затемнение под подписью: плотный градиент снизу, без плашек */
+.case::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(180deg,transparent 35%,rgba(15,12,9,.55) 62%,rgba(15,12,9,.94) 100%);}
+.case figcaption{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:clamp(16px,1.8vw,26px);transition:transform .8s var(--ease);}
+.case:hover figcaption{transform:translateY(-6px);}
+.case b{display:block;font-size:clamp(22px,1.9vw,32px);font-weight:300;line-height:1.1;}
+.b-big b{font-size:clamp(30px,3vw,48px);}
+.case span{display:block;margin-top:6px;font-size:14px;color:var(--dim);}
+.case-cta{display:flex;flex-direction:column;justify-content:space-between;align-items:flex-start;gap:20px;padding:clamp(20px,2.2vw,32px);border-radius:var(--r);background:rgba(15,12,9,.5);}
+.case-cta p{font-size:clamp(20px,1.8vw,28px);font-weight:300;line-height:1.2;}
+@media(max-width:900px){
+  .bento{grid-auto-rows:clamp(170px,26vh,240px);}
+  .b-big{grid-column:1 / -1;grid-row:span 2;}
+  .b-tall,.b-sm,.b-row{grid-column:span 3;grid-row:span 1;}
+  .case-cta{grid-column:1 / -1;}
+}
 
 /* ===== 7. Что оформляем: панели ===== */
 .acc{display:flex;gap:var(--gut);height:clamp(480px,74vh,720px);}

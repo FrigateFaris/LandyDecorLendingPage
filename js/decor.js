@@ -200,6 +200,12 @@
   // ---------- 8. Ролики: лента въезжает сбоку ----------
   gsap.fromTo('.reel', { opacity: 0, x: 120 }, { opacity: 1, x: 0, duration: 1.3, ease: 'expo.out', stagger: 0.07, scrollTrigger: { trigger: '.reel-row', start: 'top 85%', once: true } });
 
+  // ---------- 6. Клиенты: фото в плитках бенто плывут с разной скоростью (запас 8% сверху и снизу) ----------
+  gsap.utils.toArray('.case-img').forEach((box, i) => {
+    const amp = [5, 4, 5, 3, 5, 4][i % 6];   // ≤5% высоты фото (116% плитки) — с запасом меньше 8%
+    gsap.fromTo(box, { yPercent: -amp }, { yPercent: amp, ease: 'none', scrollTrigger: { trigger: box.parentElement, start: 'top bottom', end: 'bottom top', scrub: true } });
+  });
+
   // ---------- 9–10. Кадры процесса и деталей: шторка + наезд, внутри — параллакс ----------
   gsap.utils.toArray('[data-reveal-img]').forEach((box, i) => {
     const inner = box.querySelector('img, video');
