@@ -268,14 +268,15 @@ html:not(.motion) .ct-day,html:not(.motion) .cine-side{display:none;}
 .story{padding:6vh 0;}
 .story-grid{align-items:start;}
 .story-media{position:sticky;top:12vh;height:76vh;border-radius:var(--r);overflow:hidden;background:var(--bg2);}
-.sm-img{position:absolute;inset:0;clip-path:inset(100% 0 0 0);transition:clip-path 1.25s var(--ease) .6s;z-index:1;}
-.sm-img.is-active{clip-path:inset(0 0 0 0);transition:clip-path 1.25s var(--ease) 0s;z-index:2;}
-.sm-img > img,.sm-img > video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.12);transition:transform 1.8s var(--ease);}
-.sm-img.is-active > img,.sm-img.is-active > video{transform:scale(1);}
+/* сцены лежат стопкой (следующая выше); смену двигает прокрутка — decor.js открывает сцену снизу вверх
+   ровно со скоростью текста следующей главы */
+.sm-img{position:absolute;inset:0;z-index:1;}
+html.motion .sm-img:not([data-scene="0"]){clip-path:inset(100% 0 0 0);}
+html:not(.motion) .sm-img:not(.is-active){display:none;}
+.sm-img > img,.sm-img > video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
 /* сцена с видео Нигины: видео во весь рост, по бокам — размытый кадр */
 .sm-talk .talk-bg{opacity:.9;}
-.sm-talk .talk-vid{left:50%;right:auto;width:auto;height:100%;aspect-ratio:9/16;object-fit:cover;transform:translateX(-50%) scale(1.05);border-radius:0;}
-.sm-talk.is-active .talk-vid{transform:translateX(-50%);}
+.sm-talk .talk-vid{left:50%;right:auto;width:auto;height:100%;aspect-ratio:9/16;object-fit:cover;transform:translateX(-50%);border-radius:0;}
 .talk-play{position:absolute;z-index:3;left:50%;bottom:clamp(70px,12vh,110px);transform:translateX(-50%);display:flex;align-items:center;gap:12px;padding:14px 22px 14px 14px;border-radius:100px;background:rgba(15,12,9,.78);font-size:13px;font-weight:600;letter-spacing:.06em;white-space:nowrap;transition:background .3s,opacity .4s;}
 .talk-play span{display:grid;place-items:center;width:38px;height:38px;border-radius:50%;background:var(--accent);color:var(--bg);font-size:13px;}
 .talk-play:hover{background:rgba(15,12,9,.95);}
@@ -425,7 +426,8 @@ details p{color:var(--dim);font-size:15px;margin-top:12px;}
 
 /* ===== Подписи поверх фото и видео: только тёмный градиент снизу кадра, без плашек ===== */
 .h-img::after,.reel::after{background:linear-gradient(180deg,transparent 40%,rgba(15,12,9,.55) 68%,rgba(15,12,9,.92) 100%);}
-.story-media::after{content:"";position:absolute;left:0;right:0;bottom:0;height:45%;z-index:3;pointer-events:none;background:linear-gradient(180deg,transparent,rgba(15,12,9,.8));}
+.story-media::before{content:"";position:absolute;left:0;right:0;top:0;height:28%;z-index:3;pointer-events:none;background:linear-gradient(180deg,rgba(15,12,9,.75),transparent);}   /* под кнопками глав */
+.story-media::after{content:"";position:absolute;left:0;right:0;bottom:0;height:50%;z-index:3;pointer-events:none;background:linear-gradient(180deg,transparent,rgba(15,12,9,.55) 45%,rgba(15,12,9,.92));}   /* под годом */
 .cine-shade{background:linear-gradient(180deg,rgba(15,12,9,.35),rgba(15,12,9,.1) 40%,rgba(15,12,9,.6) 70%,rgba(15,12,9,.92));}
 
 /* ===== Анимации (классы, которые ставит decor.js) ===== */

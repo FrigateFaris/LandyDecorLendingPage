@@ -142,6 +142,24 @@
     });
     gsap.fromTo(ch.querySelectorAll('.eyebrow, h2, p, .sign'), { opacity: 0, y: 50 }, { opacity: 1, y: 0, stagger: 0.1, duration: 1.1, ease: 'expo.out', scrollTrigger: { trigger: ch, start: 'top 70%' } });
   });
+  // Смена кадра привязана к прокрутке: верх главы N проходит от низа сцены (88% экрана) до её верха (12%) —
+  // и край кадра N поднимается вместе с ним, с той же скоростью. Предыдущий кадр чуть уходит вверх.
+  const media = document.querySelector('.story-media');
+  scenes.forEach(scene => {
+    const i = +scene.dataset.scene;
+    if (!i) return;
+    const ch = document.querySelector(`.chapter[data-scene="${i}"]`);
+    const prev = document.querySelector(`.sm-img[data-scene="${i - 1}"] > img, .sm-img[data-scene="${i - 1}"] > video`);
+    const top = () => parseFloat(getComputedStyle(media).top);   // сцена «прилипает» на этом расстоянии от верха экрана
+    // текст главы стоит по центру высокого блока — привязываемся к строке «Глава N» (без учёта её анимации появления)
+    const eb = ch.querySelector('.eyebrow');
+    const off = () => Math.round(eb.getBoundingClientRect().top - ch.getBoundingClientRect().top - (gsap.getProperty(eb, 'y') || 0));
+    const st = { trigger: ch, start: () => `top+=${off()} ${top() + media.offsetHeight}px`, end: () => `top+=${off()} ${top()}px`, scrub: true, invalidateOnRefresh: true };
+    gsap.fromTo(scene, { clipPath: 'inset(100% 0% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', ease: 'none', scrollTrigger: st });
+    const inner = scene.querySelector(':scope > img:not(.talk-bg), :scope > video:not(.talk-vid)');   // видео Нигины центровано своим transform — его не трогаем
+    if (inner) gsap.fromTo(inner, { scale: 1.15 }, { scale: 1, ease: 'none', scrollTrigger: { ...st } });
+    if (prev) gsap.fromTo(prev, { yPercent: 0 }, { yPercent: -12, ease: 'none', scrollTrigger: { ...st } });
+  });
 
   // ---------- 7. Панели услуг: выезжают по очереди ----------
   gsap.fromTo('.acc-item', { opacity: 0, y: 80 }, { opacity: 1, y: 0, duration: 1.2, ease: 'expo.out', stagger: 0.08, scrollTrigger: { trigger: '.acc', start: 'top 85%', once: true } });
