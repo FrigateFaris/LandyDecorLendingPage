@@ -414,6 +414,22 @@ details p{color:var(--dim);font-size:15px;margin-top:12px;}
 .ftr-season p{color:var(--dim);font-size:14px;margin-bottom:16px;}
 .ftr-copy{font-size:13px;color:var(--dim2);margin-top:20px;}
 
+/* ===== Подписи поверх фото и видео: полупрозрачная тёмная подложка для читаемости ===== */
+:root{--cap-bg:rgba(15,12,9,.68);--cap-in:10px;}
+.h-card figcaption,.case figcaption,.det figcaption{left:var(--cap-in);right:var(--cap-in);bottom:var(--cap-in);border-radius:12px;background:var(--cap-bg);padding:12px 16px;}
+.h-card figcaption{flex-wrap:wrap;row-gap:2px;}
+.reel-cap{left:var(--cap-in);right:var(--cap-in);bottom:var(--cap-in);padding:12px 14px;border-radius:12px;background:var(--cap-bg);}
+.acc-body{left:var(--cap-in);right:auto;bottom:var(--cap-in);max-width:min(560px,calc(100% - 2 * var(--cap-in)));border-radius:14px;background:var(--cap-bg);padding:clamp(18px,2vw,30px);}
+.acc-label{left:var(--cap-in);bottom:var(--cap-in);padding:16px 12px;border-radius:12px;background:var(--cap-bg);}
+.sm-year{padding:4px 18px 10px;border-radius:14px;background:var(--cap-bg);}
+.cine-cap p,.cine-cap span{justify-self:start;padding:12px 16px;border-radius:12px;background:var(--cap-bg);}
+.cine-cap span{justify-self:end;}
+.step-num{padding:2px 14px 6px;border-radius:12px;background:var(--cap-bg);text-shadow:none;}
+@media(max-width:900px){
+  .acc-label{left:0;bottom:0;right:0;border-radius:0;background:none;}   /* закрытая панель на телефоне — уже тёмная полоса */
+  .cine-cap span{justify-self:start;}
+}
+
 /* ===== Анимации (классы, которые ставит decor.js) ===== */
 .wm{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.1em;margin-bottom:-.1em;}
 .wi{display:inline-block;}
