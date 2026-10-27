@@ -129,6 +129,8 @@
   const wipe = [1, 0, 0];   // насколько открыт каждый кадр (0…1); первый открыт всегда
   let current = -1;
   const applyScene = () => {
+    // видео Нигины с размытыми боками запускается (без звука), как только его кадр начал выезжать — чтобы не выезжал чёрный блок
+    window.__talkWarm && window.__talkWarm(wipe[2] > 0);
     let i = 0;
     wipe.forEach((p, k) => { if (p >= 0.5) i = k; });
     if (i === current) return;
@@ -148,9 +150,27 @@
   chapters.forEach(ch => {
     gsap.fromTo(ch.querySelectorAll('.eyebrow, h2, p, .sign'), { opacity: 0, y: 50 }, { opacity: 1, y: 0, stagger: 0.1, duration: 1.1, ease: 'expo.out', scrollTrigger: { trigger: ch, start: 'top 70%' } });
   });
-  // Смена кадра привязана к прокрутке: верх главы N проходит от низа сцены (88% экрана) до её верха (12%) —
-  // и край кадра N поднимается вместе с ним, с той же скоростью. Предыдущий кадр чуть уходит вверх.
+  // Смена кадра привязана к прокрутке: строка «Глава N» проходит от низа сцены до её верха —
+  // и край кадра N поднимается вместе с ней, с той же скоростью. Предыдущий кадр чуть уходит вверх.
   const media = document.querySelector('.story-media');
+  // Чтобы смены шли строго по очереди, строки «Глава N» должны отстоять друг от друга не меньше высоты сцены.
+  // Недостающее расстояние добавляем отступом сверху главы — ровно сколько нужно, без лишней пустоты.
+  const ebTop = c => {
+    const eb = c.querySelector('.eyebrow');
+    const inside = c.classList.contains('ch-hold') ? eb.offsetTop
+      : eb.getBoundingClientRect().top - c.getBoundingClientRect().top - (gsap.getProperty(eb, 'y') || 0);
+    return c.getBoundingClientRect().top + scrollY + inside;
+  };
+  const spaceChapters = () => {
+    chapters.forEach(c => { c.style.marginTop = ''; });
+    if (getComputedStyle(media).display === 'none') return;   // на телефоне сцены нет
+    for (let k = 1; k < chapters.length; k++) {
+      const need = media.offsetHeight + 12, gap = ebTop(chapters[k]) - ebTop(chapters[k - 1]);
+      if (gap < need) chapters[k].style.marginTop = Math.ceil(need - gap) + 'px';
+    }
+  };
+  spaceChapters();
+  ScrollTrigger.addEventListener('refreshInit', spaceChapters);
   scenes.forEach(scene => {
     const i = +scene.dataset.scene;
     if (!i) return;
@@ -159,9 +179,10 @@
     const top = () => parseFloat(getComputedStyle(media).top);   // сцена «прилипает» на этом расстоянии от верха экрана
     // текст главы стоит по центру высокого блока — привязываемся к строке «Глава N» (без учёта её анимации появления)
     const eb = ch.querySelector('.eyebrow');
-    // у последней главы текст прилипает по центру, поэтому кадр идёт за верхом её блока и раскрывается полностью ровно тогда,
-    // когда текст останавливается рядом с видео
-    const off = () => ch.classList.contains('ch-hold') ? 0 : Math.round(eb.getBoundingClientRect().top - ch.getBoundingClientRect().top - (gsap.getProperty(eb, 'y') || 0));
+    // смещение строки «Глава N» от верха главы; у прилипающей главы — по раскладке внутри её блока (липкость не влияет)
+    const off = () => ch.classList.contains('ch-hold') ? eb.offsetTop
+      : Math.round(eb.getBoundingClientRect().top - ch.getBoundingClientRect().top - (gsap.getProperty(eb, 'y') || 0));
+    // кадр начинает выезжать, когда «Глава N» подходит к низу сцены, и открыт полностью, когда строка доходит до верха сцены
     const st = { trigger: ch, start: () => `top+=${off()} ${top() + media.offsetHeight}px`, end: () => `top+=${off()} ${top()}px`, scrub: true, invalidateOnRefresh: true };
     gsap.fromTo(scene, { clipPath: 'inset(100% 0% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', ease: 'none',
       scrollTrigger: { ...st, onUpdate: self => { wipe[i] = self.progress; applyScene(); }, onRefresh: self => { wipe[i] = self.progress; applyScene(); } } });
@@ -368,21 +389,32 @@ function initTalk() {
       label.textContent = loud ? 'Выключить звук' : 'Включить звук';
     });
   };
-  // включается, когда на экране сцена «Сегодня» (вызывает история) и пока сама история видна
+  // пока видео не загрузилось, бока берут размытый стоп-кадр — чтобы кадр никогда не выезжал чёрным
+  const poster = new Image();
+  poster.onload = () => { if (v.readyState < 2) ctx.drawImage(poster, 0, 0, amb.width, amb.height); };
+  poster.src = v.getAttribute('poster');
+  // воспроизведение (без звука): с начала выезда кадра (warm) и пока сцена активна (on)
+  let warm = false;
+  const run = play => {
+    if (play) {
+      if (!v.src) v.src = v.dataset.src;
+      if (v.paused) v.play().catch(() => {});
+      if (!timer) timer = setInterval(draw, 120);
+    } else {
+      if (!v.paused) v.pause();
+      clearInterval(timer); timer = null;
+    }
+  };
+  window.__talkWarm = w => { if (w !== warm) { warm = w; run(warm || on); } };
+  // сцена «Сегодня» активна (кадр открыт больше чем наполовину): показываем кнопку звука
   window.__talkScene = active => {
     on = active;
     media.classList.toggle('talk-on', active);
-    if (active) {
-      if (!v.src) v.src = v.dataset.src;
-      v.play().catch(() => {});
-      clearInterval(timer); timer = setInterval(draw, 120);
-    } else {
-      v.pause(); clearInterval(timer);
-      if (!v.muted) setSound(false);
-    }
+    if (!active && !v.muted) setSound(false);
+    run(warm || on);
   };
   if ('IntersectionObserver' in window) {
-    new IntersectionObserver(([e]) => { if (!e.isIntersecting && on) window.__talkScene(false); }).observe(media);
+    new IntersectionObserver(([e]) => { if (!e.isIntersecting) run(false); else run(warm || on); }).observe(media);
   }
   v.addEventListener('loadeddata', draw);
   buttons.forEach(b => b.addEventListener('click', () => {
