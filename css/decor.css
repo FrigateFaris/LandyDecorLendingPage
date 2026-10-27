@@ -300,7 +300,7 @@ html:not(.motion) .sm-img:not(.is-active){display:none;}
 /* Каждая глава: текст прилипает на той же высоте, что и сцена (12vh, высота 76vh), и стоит на месте --hold прокрутки —
    время прочитать. Затем глава уезжает вверх, а следующая поднимается снизу, и её кадр открывается вместе с ней.
    Расстояние между главами = 76vh + --hold, поэтому смены кадров никогда не накладываются. */
-.story{--hold:65vh;}
+.story{--hold:20vh;}   /* короткая остановка: 65vh показалось долгой паузой */
 .chapter.ch-hold{display:block;min-height:0;height:calc(76vh + var(--hold));padding:0;}
 .ch-inner{position:sticky;top:12vh;height:76vh;display:flex;flex-direction:column;justify-content:flex-start;}   /* текст вровень с верхом кадра — край кадра идёт ровно со строкой «Глава N» */
 .chapter h2{font-size:clamp(34px,3.8vw,60px);margin-bottom:24px;}
