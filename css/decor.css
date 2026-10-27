@@ -366,20 +366,29 @@ html:not(.motion) .sm-img:not(.is-active){display:none;}
   background:radial-gradient(ellipse 85% 75% at 0% 100%,rgba(15,12,9,.9) 0%,rgba(15,12,9,.6) 50%,transparent 80%),
              linear-gradient(180deg,rgba(15,12,9,.2) 0%,rgba(15,12,9,.3) 30%,rgba(15,12,9,.82) 58%,rgba(15,12,9,.97) 100%);}
 .acc-item:focus-visible{box-shadow:0 0 0 2px var(--accent);}
-.acc-label{position:absolute;z-index:2;left:0;bottom:0;padding:22px 18px;display:flex;flex-direction:column;align-items:flex-start;gap:14px;transition:opacity .4s;}
-.acc-label span{writing-mode:vertical-rl;transform:rotate(180deg);font-size:clamp(18px,1.5vw,24px);font-weight:300;white-space:nowrap;}
-.acc-item.is-open .acc-label{opacity:0;}
-.acc-body{position:absolute;z-index:2;left:0;right:0;bottom:0;padding:clamp(22px,2.6vw,40px);max-width:620px;opacity:0;transform:translateY(24px);transition:opacity .5s,transform .8s var(--ease);pointer-events:none;}
-.acc-item.is-open .acc-body{opacity:1;transform:none;transition-delay:.35s;pointer-events:auto;}
-.acc-body h3{font-size:clamp(28px,2.8vw,46px);margin-bottom:14px;}
+/* Название панели — один и тот же заголовок в обоих состояниях.
+   Свёрнута: повёрнут на −90° (читается снизу вверх) и уменьшен до --s. Раскрыта: горизонтально, в полный размер.
+   Поворот, масштаб и сдвиг — один transform от левого нижнего угла, поэтому переход плавный и без скачков.
+   Описание (.acc-more) раскрывается по высоте (0fr → 1fr) уже после поворота, при сворачивании — сразу. */
+.acc-body{position:absolute;z-index:2;left:0;bottom:0;width:min(620px,100%);padding:clamp(22px,2.6vw,40px);}
+.acc-t{--s:.52;font-size:clamp(28px,2.8vw,46px);line-height:1.08;white-space:nowrap;width:max-content;margin-bottom:0;
+  transform-origin:0 100%;transform:translateX(calc(1.08em * var(--s))) rotate(-90deg) scale(var(--s));
+  transition:transform .95s var(--ease),margin .6s var(--ease);}
+.acc-item.is-open .acc-t{transform:translateX(0) rotate(0deg) scale(1);margin-bottom:14px;}   /* одна строка в обоих состояниях — без скачка переноса */
+.acc-more{display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows .6s var(--ease),opacity .3s;}
+.acc-more > div{overflow:hidden;min-height:0;}
+.acc-item.is-open .acc-more{grid-template-rows:1fr;opacity:1;transition:grid-template-rows .8s var(--ease) .45s,opacity .6s ease .55s;}
 .acc-body p{color:var(--dim);font-size:clamp(15px,1.1vw,17px);margin-bottom:20px;}
 .acc-body .tags{margin-bottom:22px;}
+.acc-item:not(.is-open) .acc-body{pointer-events:none;}
 @media(max-width:900px){
   .acc{flex-direction:column;height:auto;gap:10px;}
   .acc-item{flex:none;height:76px;transition:height .8s var(--ease);}
   .acc-item.is-open{height:72vh;}
-  .acc-label{flex-direction:row;align-items:center;padding:0 18px;height:76px;}
-  .acc-label span{writing-mode:horizontal-tb;transform:none;font-size:20px;}
+  .acc-body{padding:0 18px 26px;}
+  /* на телефоне свёрнутая полоса горизонтальная — название без поворота, только меньше */
+  .acc-t{--s:.8;font-size:clamp(20px,6.2vw,28px);transform:scale(var(--s));}   /* в одну строку даже «Магазины и торговые залы» на 375px */
+  .acc-item.is-open .acc-body{padding:0 20px 24px;}
 }
 
 /* ===== 8. Вживую: ролики ===== */
