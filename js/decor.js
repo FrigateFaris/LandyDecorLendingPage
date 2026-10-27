@@ -322,29 +322,23 @@ function initCountdown() {
   render(); setInterval(render, 1000);
 }
 
-// ---------- Панели «Что оформляем»: наведение / нажатие раскрывает, пока блок на экране — листаются сами ----------
+// ---------- Панели «Что оформляем»: раскрываются по нажатию или если задержать на панели курсор ----------
+// Без автопролистывания: спокойнее и дороже. Короткий пробег мышью по панелям ничего не дёргает.
 function initAccordion() {
   const acc = document.querySelector('.acc');
   if (!acc) return;
   const items = [...acc.querySelectorAll('.acc-item')];
-  const open = it => items.forEach(x => x.classList.toggle('is-open', x === it));
-  let touched = false, timer = null;
+  const open = it => { if (!it.classList.contains('is-open')) items.forEach(x => x.classList.toggle('is-open', x === it)); };
   const desktop = matchMedia('(min-width: 901px) and (hover: hover)').matches;
+  let hoverTimer = null;
   items.forEach(it => {
-    if (desktop) it.addEventListener('mouseenter', () => { touched = true; open(it); });
-    it.addEventListener('click', () => { touched = true; open(it); });
-    it.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); touched = true; open(it); } });
+    if (desktop) {
+      it.addEventListener('mouseenter', () => { clearTimeout(hoverTimer); hoverTimer = setTimeout(() => open(it), 280); });
+      it.addEventListener('mouseleave', () => clearTimeout(hoverTimer));
+    }
+    it.addEventListener('click', () => { clearTimeout(hoverTimer); open(it); });
+    it.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(it); } });
   });
-  acc.addEventListener('mouseleave', () => { touched = false; });
-  if (!desktop || !('IntersectionObserver' in window)) return;
-  new IntersectionObserver(([e]) => {
-    clearInterval(timer);
-    if (e.isIntersecting) timer = setInterval(() => {
-      if (touched) return;
-      const i = items.findIndex(x => x.classList.contains('is-open'));
-      open(items[(i + 1) % items.length]);
-    }, 4200);
-  }, { threshold: 0.5 }).observe(acc);
 }
 
 // ---------- Ролики: наведение — превью без звука, клик — на весь экран ----------
