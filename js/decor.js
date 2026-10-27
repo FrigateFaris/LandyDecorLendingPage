@@ -287,12 +287,13 @@ function initVideos() {
 
 // ---------- Общий фон: тон берётся у секции, которая пересекает середину экрана ----------
 function initTones() {
-  const secs = document.querySelectorAll('[data-tone]:not(body)');
-  if (!('IntersectionObserver' in window)) return;
-  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) document.body.dataset.tone = e.target.dataset.tone; }), { rootMargin: '-50% 0px -50% 0px' });
+  const stage = document.querySelector('.stage');
+  const secs = document.querySelectorAll('main [data-tone], footer[data-tone]');
+  if (!stage || !('IntersectionObserver' in window)) return;
+  // метку ставим только если тон действительно сменился — лишних пересчётов нет
+  const set = t => { if (stage.dataset.tone !== t) stage.dataset.tone = t; };
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) set(e.target.dataset.tone); }), { rootMargin: '-50% 0px -50% 0px' });
   secs.forEach(s => io.observe(s));
-  // огни на паузе, когда бархатного тона нет на экране
-  new MutationObserver(() => document.body.classList.toggle('paused', document.body.dataset.tone !== 'velvet')).observe(document.body, { attributes: true, attributeFilter: ['data-tone'] });
 }
 
 // ---------- Отсчёт до Нового года (Ташкент, UTC+5) ----------
