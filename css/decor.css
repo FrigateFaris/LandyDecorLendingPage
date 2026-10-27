@@ -275,12 +275,19 @@ html.motion .sm-img:not([data-scene="0"]){clip-path:inset(100% 0 0 0);}
 html:not(.motion) .sm-img:not(.is-active){display:none;}
 .sm-img > img,.sm-img > video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
 /* сцена с видео Нигины: видео во весь рост, по бокам — размытый кадр */
-.sm-talk .talk-bg{opacity:.9;}
-.sm-talk .talk-vid{left:50%;right:auto;width:auto;height:100%;aspect-ratio:9/16;object-fit:cover;transform:translateX(-50%);border-radius:0;}
-.talk-play{position:absolute;z-index:3;left:50%;bottom:clamp(70px,12vh,110px);transform:translateX(-50%);display:flex;align-items:center;gap:12px;padding:14px 22px 14px 14px;border-radius:100px;background:rgba(15,12,9,.78);font-size:13px;font-weight:600;letter-spacing:.06em;white-space:nowrap;transition:background .3s,opacity .4s;}
-.talk-play span{display:grid;place-items:center;width:38px;height:38px;border-radius:50%;background:var(--accent);color:var(--bg);font-size:13px;}
-.talk-play:hover{background:rgba(15,12,9,.95);}
-.sm-talk.playing .talk-play{opacity:0;pointer-events:none;}
+/* сцена с Нигиной: по центру видео 9:16, по бокам — его же размытая копия (canvas 18×24, растянутый браузером) */
+.sm-talk{background:var(--bg);}
+.sm-talk .talk-amb{position:absolute;inset:-4%;width:108%;height:108%;opacity:.9;}
+.sm-talk .talk-vid{left:50%;right:auto;width:auto;height:100%;aspect-ratio:9/16;object-fit:cover;transform:translateX(-50%);border-radius:0;box-shadow:0 0 60px rgba(15,12,9,.5);}
+/* кнопка звука: видна, когда на экране сцена с Нигиной; на компьютере ярче при наведении на кадр */
+.talk-sound{position:absolute;z-index:5;left:50%;bottom:clamp(20px,4vh,36px);transform:translateX(-50%);display:flex;align-items:center;gap:10px;padding:12px 20px 12px 14px;border-radius:100px;background:rgba(15,12,9,.6);font-size:13px;font-weight:600;letter-spacing:.04em;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .4s,background .3s;}
+.talk-sound svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+.talk-sound svg path:first-child{fill:currentColor;stroke:none;}
+.talk-sound .w{display:none;}
+.talk-sound[aria-pressed="true"] .w{display:block;}
+.talk-sound[aria-pressed="true"] .x{display:none;}
+.story-media.talk-on .talk-sound{opacity:.75;pointer-events:auto;}
+.story-media.talk-on:hover .talk-sound,.talk-sound:focus-visible{opacity:1;background:rgba(15,12,9,.85);}
 .sm-year{position:absolute;left:var(--gut);bottom:var(--gut);z-index:4;font-size:clamp(48px,6vw,110px);font-weight:200;line-height:1;overflow:hidden;}
 .sm-year span{display:inline-block;}
 .sm-year{transition:opacity .6s;}
@@ -289,6 +296,10 @@ html:not(.motion) .sm-img:not(.is-active){display:none;}
 .story-nav span{padding:8px 14px;border-radius:100px;font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);background:rgba(15,12,9,.62);transition:background .4s,color .4s;}
 .story-nav span.is-active{background:var(--accent);color:var(--bg);}
 .chapter{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:9vh 0;}
+/* последняя глава: текст прилипает на той же высоте, что и сцена (12vh, 76vh), и стоит по центру ещё 60vh прокрутки;
+   уходят текст и сцена вместе — блок заканчивается одновременно */
+.chapter.ch-hold{display:block;min-height:0;height:calc(76vh + 60vh);padding:0;}
+.ch-inner{position:sticky;top:12vh;height:76vh;display:flex;flex-direction:column;justify-content:center;}
 .chapter h2{font-size:clamp(34px,3.8vw,60px);margin-bottom:24px;}
 .chapter p{color:var(--dim);font-size:clamp(16px,1.2vw,19px);}
 .chapter-img{display:none;}
@@ -301,6 +312,8 @@ html:not(.motion) .sm-img:not(.is-active){display:none;}
   .chapter-img{display:block;position:relative;aspect-ratio:4/5;border-radius:var(--r);overflow:hidden;margin-bottom:28px;}
   .chapter-img > *{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
   .chapter-talk{aspect-ratio:9/16;width:100%;max-width:calc(82vh * 9 / 16);align-self:center;}
+  .chapter.ch-hold{height:auto;padding:56px 0;}
+  .ch-inner{position:static;height:auto;}
   .talk-btn{display:none;}
 }
 

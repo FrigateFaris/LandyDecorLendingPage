@@ -131,7 +131,7 @@
         const i = ch.dataset.scene;
         scenes.forEach(s => s.classList.toggle('is-active', s.dataset.scene === i));
         navItems.forEach(n => n.classList.toggle('is-active', n.dataset.nav === i));
-        if (i !== '2') window.__talkPause && window.__talkPause();
+        window.__talkScene && window.__talkScene(i === '2');
         if (yearEl.textContent !== ch.dataset.year) {
           gsap.timeline()
             .to(yearEl, { yPercent: -110, duration: 0.35, ease: 'power2.in' })
@@ -153,7 +153,9 @@
     const top = () => parseFloat(getComputedStyle(media).top);   // сцена «прилипает» на этом расстоянии от верха экрана
     // текст главы стоит по центру высокого блока — привязываемся к строке «Глава N» (без учёта её анимации появления)
     const eb = ch.querySelector('.eyebrow');
-    const off = () => Math.round(eb.getBoundingClientRect().top - ch.getBoundingClientRect().top - (gsap.getProperty(eb, 'y') || 0));
+    // у последней главы текст прилипает по центру, поэтому кадр идёт за верхом её блока и раскрывается полностью ровно тогда,
+    // когда текст останавливается рядом с видео
+    const off = () => ch.classList.contains('ch-hold') ? 0 : Math.round(eb.getBoundingClientRect().top - ch.getBoundingClientRect().top - (gsap.getProperty(eb, 'y') || 0));
     const st = { trigger: ch, start: () => `top+=${off()} ${top() + media.offsetHeight}px`, end: () => `top+=${off()} ${top()}px`, scrub: true, invalidateOnRefresh: true };
     gsap.fromTo(scene, { clipPath: 'inset(100% 0% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', ease: 'none', scrollTrigger: st });
     const inner = scene.querySelector(':scope > img:not(.talk-bg), :scope > video:not(.talk-vid)');   // видео Нигины центровано своим transform — его не трогаем
@@ -339,20 +341,49 @@ function initReels() {
   addEventListener('keydown', e => { if (e.key === 'Escape' && !lb.hidden) close(); });
 }
 
-// ---------- Видео-обращение Нигины в истории ----------
+// ---------- Видео-обращение Нигины в истории: фоном без звука, звук — по кнопке ----------
 function initTalk() {
   const scene = document.querySelector('.sm-talk');
   if (!scene) return;
+  const media = scene.closest('.story-media');
   const v = scene.querySelector('video');
-  const playTalk = () => {
-    // на телефоне сцена скрыта — играем видео внутри главы
-    if (!scene.offsetParent) { const m = document.querySelector('.chapter-talk video'); m && m.play(); return; }
-    scene.classList.add('playing'); v.controls = true; v.muted = false; v.play().catch(() => {});
+  const amb = scene.querySelector('.talk-amb'), ctx = amb.getContext('2d');
+  const buttons = document.querySelectorAll('[data-talk]');
+  let on = false, timer = null;
+  // размытые бока: раз в 120 мс копируем кадр видео в крошечный canvas — браузер сам растягивает его в мягкое пятно
+  const draw = () => { if (v.readyState >= 2) try { ctx.drawImage(v, 0, 0, amb.width, amb.height); } catch (e) {} };
+  const setSound = loud => {
+    v.muted = !loud;
+    if (loud) { v.currentTime = 0; v.play().catch(() => {}); }   // со звуком — с начала обращения
+    buttons.forEach(b => {
+      b.setAttribute('aria-pressed', String(loud));
+      const label = b.querySelector('b') || b;
+      label.textContent = loud ? 'Выключить звук' : 'Включить звук';
+    });
   };
-  window.__talkPause = () => { if (!v.paused) v.pause(); };
-  v.addEventListener('pause', () => scene.classList.remove('playing'));
-  v.addEventListener('play', () => scene.classList.add('playing'));
-  document.querySelectorAll('[data-talk]').forEach(b => b.addEventListener('click', playTalk));
+  // включается, когда на экране сцена «Сегодня» (вызывает история) и пока сама история видна
+  window.__talkScene = active => {
+    on = active;
+    media.classList.toggle('talk-on', active);
+    if (active) {
+      if (!v.src) v.src = v.dataset.src;
+      v.play().catch(() => {});
+      clearInterval(timer); timer = setInterval(draw, 120);
+    } else {
+      v.pause(); clearInterval(timer);
+      if (!v.muted) setSound(false);
+    }
+  };
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(([e]) => { if (!e.isIntersecting && on) window.__talkScene(false); }).observe(media);
+  }
+  v.addEventListener('loadeddata', draw);
+  buttons.forEach(b => b.addEventListener('click', () => {
+    // на телефоне сцена скрыта — звук включаем у видео внутри главы
+    if (!scene.offsetParent) { const m = document.querySelector('.chapter-talk video'); if (m) { m.muted = false; m.play().catch(() => {}); } return; }
+    if (!on) window.__talkScene(true);
+    setSound(v.muted);
+  }));
 }
 
 // ---------- Заявка → тот же Google Apps Script, что и у Landy School ----------
