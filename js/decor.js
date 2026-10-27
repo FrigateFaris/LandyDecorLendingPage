@@ -144,7 +144,6 @@
     gsap.fromTo(box, { clipPath: 'inset(100% 0% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.4, ease: 'expo.inOut', delay: (i % 3) * 0.12, scrollTrigger: { trigger: box, start: 'top 88%', once: true } });
     if (inner) gsap.fromTo(inner, { scale: 1.3 }, { scale: 1, duration: 1.8, ease: 'expo.out', delay: (i % 3) * 0.12, scrollTrigger: { trigger: box, start: 'top 88%', once: true } });
   });
-  gsap.utils.toArray('.step-num').forEach(n => gsap.fromTo(n, { yPercent: 60, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 1.2, ease: 'expo.out', delay: 0.5, scrollTrigger: { trigger: n, start: 'top 90%', once: true } }));
 
   // ---------- 11. Заявка ----------
   gsap.fromTo('.faq details, .contact-cards a', { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 1, ease: 'expo.out', stagger: 0.08, scrollTrigger: { trigger: '.fin', start: 'top 75%', once: true } });
