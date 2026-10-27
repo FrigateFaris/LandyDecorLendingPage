@@ -241,7 +241,19 @@ html:not(.motion) .works-pin{overflow-x:auto;}
 /* ===== 4. Кино-вставка ===== */
 .cine-pin{position:relative;height:100vh;height:100svh;overflow:hidden;}
 .cine-frame{position:absolute;inset:0;overflow:hidden;will-change:transform;}
-.cine-frame video{position:absolute;inset:0;}
+.cine-frame video,.cine-day{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+html.motion .cine-night{clip-path:inset(0 0 0 100%);}   /* вечер выезжает поверх дня — шторкой справа налево (без JS сразу виден вечер) */
+html:not(.motion) .ct-day,html:not(.motion) .cine-side{display:none;}
+.cine-tag{position:absolute;z-index:3;top:5%;left:3%;padding:.5em 1em;border-radius:100px;font-size:clamp(24px,2.6vw,38px);   /* кадр в начале уменьшен вдвое — поэтому крупно */letter-spacing:.14em;text-transform:uppercase;background:rgba(15,12,9,.55);}
+.ct-night{opacity:0;color:var(--accent-hi);}
+/* боковые кадры проекта: слева снизу и справа сверху, ширина 2 колонки */
+.cine-side{position:absolute;z-index:1;width:calc(var(--col) * 2 + var(--gut));aspect-ratio:3/4;border-radius:var(--r);overflow:hidden;will-change:transform;}
+.cine-side img{width:100%;height:100%;object-fit:cover;}
+.cine-side::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(15,12,9,.85));}
+.cine-side span{position:absolute;z-index:2;left:14px;bottom:12px;font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);}
+.cs-l{left:var(--edge);bottom:9vh;}
+.cs-r{right:var(--edge);top:12vh;}
+@media(max-width:900px){.cine-side{display:none;}}   /* на узком экране боковым кадрам нет места — остаётся день → вечер */
 .cine-shade{position:absolute;inset:0;z-index:2;background:linear-gradient(180deg,rgba(15,12,9,.35),rgba(15,12,9,.1) 40%,rgba(15,12,9,.8));}
 .cine-words{position:absolute;inset:0;z-index:3;align-content:center;row-gap:52vh;pointer-events:none;}   /* слова — над и под кадром, не поверх него */
 @media(max-width:900px){.cine-words{row-gap:64vh;}}

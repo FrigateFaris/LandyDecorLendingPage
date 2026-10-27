@@ -92,7 +92,7 @@
     gsap.fromTo(card, { scale: 0.86, opacity: 0.4 }, { scale: 1, opacity: 1, ease: 'none', scrollTrigger: { trigger: card, containerAnimation: hTween, start: 'left 100%', end: 'left 55%', scrub: true } });
   });
 
-  // ---------- 4. Кино-вставка: кадр 6 колонок раскрывается на весь экран, слова разъезжаются ----------
+  // ---------- 4. Кино-сцена «день → вечер»: вечер шторкой закрывает день, кадр раскрывается, боковые кадры разлетаются ----------
   const frame = document.querySelector('.cine-frame');
   // стартовая ширина кадра = 6 колонок сетки (на телефоне — 62% экрана)
   const startScale = () => {
@@ -101,12 +101,23 @@
     const inner = g.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight), gap = parseFloat(cs.columnGap);
     return Math.min(1, ((inner - 11 * gap) / 12 * 6 + gap * 5) / innerWidth);
   };
-  gsap.timeline({ scrollTrigger: { trigger: '.cine', start: 'top top', end: '+=160%', pin: '.cine-pin', scrub: 1, invalidateOnRefresh: true } })
-    .fromTo(frame, { scale: startScale, borderRadius: 24 }, { scale: 1, borderRadius: 0, ease: 'power2.inOut', duration: 1 }, 0)
-    .fromTo('.cw-l', { xPercent: 0 }, { xPercent: -40, opacity: 0, ease: 'power2.in', duration: 0.8 }, 0.05)
-    .fromTo('.cw-r', { xPercent: 0 }, { xPercent: 40, opacity: 0, ease: 'power2.in', duration: 0.8 }, 0.05)
-    .fromTo('.cine-shade', { opacity: 0.2 }, { opacity: 1, duration: 0.6 }, 0.4)
-    .fromTo('.cine-cap > *', { opacity: 0, y: 40 }, { opacity: 1, y: 0, stagger: 0.1, duration: 0.4, ease: 'power2.out' }, 0.75);
+  gsap.timeline({ scrollTrigger: { trigger: '.cine', start: 'top top', end: '+=240%', pin: '.cine-pin', scrub: 1, invalidateOnRefresh: true } })
+    .set(frame, { scale: startScale, borderRadius: 24 }, 0)
+    // 1) день → вечер: ночное видео выезжает поверх дневного фото, боковые кадры плывут навстречу
+    .fromTo('.cine-night', { clipPath: 'inset(0% 0% 0% 100%)' }, { clipPath: 'inset(0% 0% 0% 0%)', ease: 'power2.inOut', duration: 0.6 }, 0)
+    .to('.ct-day', { opacity: 0, duration: 0.15 }, 0.3)
+    .fromTo('.ct-night', { opacity: 0 }, { opacity: 1, duration: 0.15 }, 0.42)
+    .fromTo('.cs-l', { y: 0 }, { y: '-6vh', ease: 'none', duration: 0.6 }, 0)
+    .fromTo('.cs-r', { y: 0 }, { y: '6vh', ease: 'none', duration: 0.6 }, 0)
+    // 2) кадр раскрывается на весь экран, слова и боковые кадры разлетаются в разные стороны
+    .fromTo(frame, { scale: startScale, borderRadius: 24 }, { scale: 1, borderRadius: 0, ease: 'power2.inOut', duration: 1, immediateRender: false }, 0.65)
+    .to('.cw-l', { xPercent: -40, opacity: 0, ease: 'power2.in', duration: 0.7 }, 0.7)
+    .to('.cw-r', { xPercent: 40, opacity: 0, ease: 'power2.in', duration: 0.7 }, 0.7)
+    .to('.cs-l', { x: '-45vw', y: '30vh', rotation: -10, opacity: 0, ease: 'power2.in', duration: 0.75 }, 0.68)
+    .to('.cs-r', { x: '45vw', y: '-30vh', rotation: 10, opacity: 0, ease: 'power2.in', duration: 0.75 }, 0.68)
+    .to('.ct-night', { opacity: 0, duration: 0.2 }, 1.35)
+    .fromTo('.cine-shade', { opacity: 0.2 }, { opacity: 1, duration: 0.5 }, 1.1)
+    .fromTo('.cine-cap > *', { opacity: 0, y: 40 }, { opacity: 1, y: 0, stagger: 0.1, duration: 0.4, ease: 'power2.out' }, 1.45);
 
   // ---------- 5. История: смена сцен ----------
   const scenes = document.querySelectorAll('.sm-img');

@@ -151,12 +151,18 @@
   </div>
 </section>
 
-<!-- ============ 4. КИНО-ВСТАВКА: кадр размером 6 колонок раскрывается на весь экран ============ -->
-<!-- media/cine-facade.mp4 — ночной фасад Oqtepa Lavash (IMG_7115), 1920×1080 -->
-<section class="cine" data-tone="night" aria-label="Фасад Oqtepa Lavash ночью">
+<!-- ============ 4. КИНО-СЦЕНА «ДЕНЬ → ВЕЧЕР»: один фасад Oqtepa Lavash днём и вечером ============
+     Старт: в кадре 6 колонок — фасад днём, по углам ещё два кадра проекта, крупные слова.
+     Прокрутка: ночное видео шторкой закрывает дневное фото → кадр раскрывается на весь экран → боковые кадры разлетаются.
+     media/w-oqtepa-facade.webp — день (IMG_7142), media/cine-facade.mp4 — вечер (IMG_7115). -->
+<section class="cine" data-tone="night" aria-label="Фасад Oqtepa Lavash днём и вечером">
   <div class="cine-pin">
+    <div class="cine-side cs-l" aria-hidden="true"><img src="media/step-result.webp" alt="" loading="lazy"><span>Зал</span></div>
+    <div class="cine-side cs-r" aria-hidden="true"><img src="media/w-oqtepa-int.webp" alt="" loading="lazy"><span>Лестница</span></div>
     <div class="cine-frame">
-      <video class="vid" muted loop playsinline preload="none" poster="media/cine-facade.webp" data-src="media/cine-facade.mp4" aria-label="Ночной фасад Oqtepa Lavash в новогоднем оформлении"></video>
+      <img class="cine-day" src="media/w-oqtepa-facade.webp" alt="Фасад Oqtepa Lavash днём" loading="lazy">
+      <video class="vid cine-night" muted loop playsinline preload="none" poster="media/cine-facade.webp" data-src="media/cine-facade.mp4" aria-label="Фасад Oqtepa Lavash вечером в новогоднем оформлении"></video>
+      <span class="cine-tag ct-day">Днём</span><span class="cine-tag ct-night">Вечером</span>
       <div class="cine-shade"></div>
     </div>
     <div class="grid cine-words" aria-hidden="true">
