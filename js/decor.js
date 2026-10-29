@@ -59,7 +59,7 @@
   gsap.to('.intro-caption, .intro-meta', { yPercent: -30, opacity: 0, ease: 'none', scrollTrigger: { trigger: '.intro', start: '30% top', end: 'bottom top', scrub: true } });
 
   // ---------- Заголовки секций: слова поднимаются из-под маски ----------
-  document.querySelectorAll('main h2:not(.chapter h2), .step h4, .det h4').forEach(h => {   // названия панелей услуг анимируются поворотом (CSS)
+  document.querySelectorAll('main h2:not(.chapter h2), .step h4').forEach(h => {   // названия панелей услуг анимируются поворотом (CSS)
     const words = splitWords(h, 'mask');
     gsap.fromTo(words, { yPercent: 115 }, { yPercent: 0, duration: 1.15, ease: 'expo.out', stagger: 0.045, scrollTrigger: { trigger: h, start: 'top 90%', once: true } });
   });
