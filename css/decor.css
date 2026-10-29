@@ -479,6 +479,13 @@ details p{color:var(--dim);font-size:15px;margin-top:12px;}
 .story-media::after{content:"";position:absolute;left:0;right:0;bottom:0;height:50%;z-index:3;pointer-events:none;background:linear-gradient(180deg,transparent,rgba(15,12,9,.55) 45%,rgba(15,12,9,.92));}   /* под годом */
 .cine-shade{background:linear-gradient(180deg,rgba(15,12,9,.35),rgba(15,12,9,.1) 40%,rgba(15,12,9,.6) 70%,rgba(15,12,9,.92));}
 
+/* ===== Телефон: облегчённый режим (тот же вид, меньше работы для видеокарты) ===== */
+@media(max-width:900px){
+  .lights{display:none;}                                   /* огни: большой постоянно двигающийся слой */
+  .acc-item > img{filter:none;transition:transform 1.6s var(--acc-ease);}   /* фильтр на фото — дорого; приглушение даёт тёмный слой сверху */
+  .stage > i{transition-duration:.8s;}
+}
+
 /* ===== Анимации (классы, которые ставит decor.js) ===== */
 .wm{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.1em;margin-bottom:-.1em;}
 .wi{display:inline-block;}

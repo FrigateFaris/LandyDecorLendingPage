@@ -7,6 +7,9 @@
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const hasGsap = !!(window.gsap && window.ScrollTrigger);
   const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
+  // Облегчённый режим для телефонов: тот же вид, но без эффектов, которые пересчитываются на каждом шаге прокрутки
+  const lite = matchMedia('(max-width: 900px)').matches;
+  const touch = matchMedia('(pointer: coarse)').matches;
 
   initHeroVideo();
   initVideos();
@@ -21,10 +24,12 @@
 
   root.classList.add('motion');
   gsap.registerPlugin(ScrollTrigger);
+  // на телефоне адресная строка при прокрутке меняет высоту окна — не пересчитываем из-за этого все сцены (это и давало заминки)
+  ScrollTrigger.config({ ignoreMobileResize: true });
 
   // ---------- Плавная прокрутка и якоря ----------
   let lenis = null;
-  if (window.Lenis) {
+  if (window.Lenis && !touch) {   // на сенсорных экранах родная прокрутка плавнее и дешевле
     lenis = new Lenis({ lerp: 0.09, smoothWheel: true });
     lenis.on('scroll', ScrollTrigger.update);
     gsap.ticker.add(t => lenis.raf(t * 1000));
@@ -46,7 +51,7 @@
     lastY = y;
   };
   lenis ? lenis.on('scroll', e => onScroll(e.scroll)) : addEventListener('scroll', () => onScroll(scrollY), { passive: true });
-  gsap.to('.progress span', { scaleX: 1, ease: 'none', scrollTrigger: { start: 0, end: 'max', scrub: 0.3 } });
+  gsap.to('.progress span', { scaleX: 1, ease: 'none', scrollTrigger: { start: 0, end: 'max', scrub: lite ? true : 0.3 } });
 
   // ---------- 1. Первый экран: после заставки ----------
   const LOADER_END = 1.7;
@@ -56,7 +61,7 @@
   gsap.fromTo('.intro-meta', { opacity: 0 }, { opacity: 1, duration: 1, delay: LOADER_END + 0.5 });
   // уход первого экрана: текст поднимается и гаснет. Видео не сдвигаем — иначе его мягкий нижний край
   // обрезается границей экрана и получается резкая линия перед манифестом.
-  gsap.to('.intro-caption, .intro-meta', { yPercent: -30, opacity: 0, ease: 'none', scrollTrigger: { trigger: '.intro', start: '30% top', end: 'bottom top', scrub: true } });
+  if (!lite) gsap.to('.intro-caption, .intro-meta', { yPercent: -30, opacity: 0, ease: 'none', scrollTrigger: { trigger: '.intro', start: '30% top', end: 'bottom top', scrub: true } });
 
   // ---------- Заголовки секций: слова поднимаются из-под маски ----------
   document.querySelectorAll('main h2:not(.chapter h2), .step h4').forEach(h => {   // названия панелей услуг анимируются поворотом (CSS)
@@ -67,6 +72,7 @@
 
   // ---------- 2. Манифест: слова проявляются, цифры считаются ----------
   document.querySelectorAll('[data-split]').forEach(el => {
+    if (lite) { gsap.fromTo(el, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 1.2, ease: 'expo.out', scrollTrigger: { trigger: el, start: 'top 85%', once: true } }); return; }   // на телефоне — один плавный проявление вместо пословного
     gsap.fromTo(splitWords(el), { opacity: 0.12 }, { opacity: 1, stagger: 0.06, ease: 'none', scrollTrigger: { trigger: el, start: 'top 80%', end: 'bottom 45%', scrub: true } });
   });
   document.querySelectorAll('[data-num]').forEach(b => {
@@ -86,7 +92,7 @@
       onUpdate: self => { countEl.textContent = String(Math.min(cards.length, Math.round(self.progress * (cards.length - 1)) + 1)).padStart(2, '0'); }
     }
   });
-  cards.forEach(card => {
+  if (!lite) cards.forEach(card => {   // на телефоне без параллакса и масштаба у каждой карточки
     // ±5% от ширины фото (124% карточки) = ±6.2% карточки — меньше запаса в 12%, края фото не видны
     gsap.fromTo(card.querySelector('.h-img > *'), { xPercent: 5 }, { xPercent: -5, ease: 'none', scrollTrigger: { trigger: card, containerAnimation: hTween, start: 'left right', end: 'right left', scrub: true } });
     gsap.fromTo(card, { scale: 0.86, opacity: 0.4 }, { scale: 1, opacity: 1, ease: 'none', scrollTrigger: { trigger: card, containerAnimation: hTween, start: 'left 100%', end: 'left 55%', scrub: true } });
@@ -173,7 +179,7 @@
   };
   spaceChapters();
   ScrollTrigger.addEventListener('refreshInit', spaceChapters);
-  scenes.forEach(scene => {
+  if (!lite) scenes.forEach(scene => {   // на телефоне сцены «Истории» скрыта (картинки идут внутри глав) — смены кадров не считаем
     const i = +scene.dataset.scene;
     if (!i) return;
     const ch = document.querySelector(`.chapter[data-scene="${i}"]`);
@@ -201,7 +207,7 @@
   gsap.fromTo('.reel', { opacity: 0, x: 120 }, { opacity: 1, x: 0, duration: 1.3, ease: 'expo.out', stagger: 0.07, scrollTrigger: { trigger: '.reel-row', start: 'top 85%', once: true } });
 
   // ---------- 6. Клиенты: фото в плитках бенто плывут с разной скоростью (запас 8% сверху и снизу) ----------
-  gsap.utils.toArray('.case-img').forEach((box, i) => {
+  if (!lite) gsap.utils.toArray('.case-img').forEach((box, i) => {   // на телефоне без параллакса
     const amp = [5, 4, 5, 3, 5, 4][i % 6];   // ≤5% высоты фото (116% плитки) — с запасом меньше 8%
     gsap.fromTo(box, { yPercent: -amp }, { yPercent: amp, ease: 'none', scrollTrigger: { trigger: box.parentElement, start: 'top bottom', end: 'bottom top', scrub: true } });
   });
