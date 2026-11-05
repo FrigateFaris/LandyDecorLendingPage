@@ -344,6 +344,42 @@ html:not(.motion) .sm-img:not(.is-active){display:none;}
 .case b{display:block;font-size:clamp(19px,1.4vw,24px);font-weight:300;line-height:1.1;}
 .b-big b{font-size:clamp(24px,2vw,34px);}
 .case span{display:block;margin-top:6px;font-size:14px;color:var(--dim);}
+.case[data-gallery]{cursor:pointer;outline:none;}
+.case[data-gallery]:focus-visible{box-shadow:0 0 0 2px var(--accent-hi);}
+/* «N фото →»: проявляется при наведении (на телефоне видно всегда) */
+.case-more{display:block;margin-top:10px;font-style:normal;font-size:13px;letter-spacing:.04em;color:var(--accent-hi);opacity:0;transform:translateY(6px);transition:opacity .6s ease,transform .8s var(--ease);}
+.case:hover .case-more,.case:focus-visible .case-more{opacity:1;transform:none;}
+@media(hover:none){.case-more{opacity:1;transform:none;}}
+
+/* ===== Галерея объекта ===== */
+.gal{position:fixed;inset:0;z-index:200;display:grid;grid-template-rows:auto minmax(0,1fr) auto;gap:clamp(10px,2vh,20px);padding:clamp(14px,2.4vw,32px);
+  background:var(--bg);opacity:0;visibility:hidden;transition:opacity .6s ease,visibility 0s linear .6s;}
+.gal.is-open{opacity:1;visibility:visible;transition:opacity .6s ease;}
+.gal[hidden]{display:none;}
+.gal-top{display:flex;align-items:center;gap:20px;}
+.gal-title{flex:1;min-width:0;}
+.gal-title b{display:block;font-size:clamp(20px,1.8vw,28px);font-weight:300;line-height:1.1;}
+.gal-title span{display:block;margin-top:4px;font-size:14px;color:var(--dim);}
+.gal-count{font-size:14px;color:var(--dim);font-variant-numeric:tabular-nums;letter-spacing:.06em;}
+.gal-close,.gal-arr{flex:none;display:grid;place-items:center;width:48px;height:48px;border-radius:50%;background:rgba(43,34,24,.7);color:var(--text);font-size:18px;transition:background .3s,color .3s;}
+.gal-close:hover,.gal-arr:hover{background:var(--accent);color:var(--bg);}
+.gal-stage{position:relative;display:flex;align-items:center;gap:clamp(10px,1.6vw,24px);min-height:0;}
+.gal-frame{position:relative;flex:1;align-self:stretch;min-height:0;}
+.gal-frame img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;transform:scale(1.02);transition:opacity .7s ease,transform 1.2s var(--ease);}
+.gal-frame img.is-on{opacity:1;transform:none;}
+.gal-thumbs{display:flex;gap:8px;justify-content:safe center;overflow-x:auto;scrollbar-width:none;padding:2px;}
+.gal-thumbs::-webkit-scrollbar{display:none;}
+.gal-thumbs button{flex:none;width:64px;height:64px;border-radius:10px;overflow:hidden;opacity:.4;transition:opacity .4s ease;}
+.gal-thumbs button.is-on,.gal-thumbs button:hover{opacity:1;}
+.gal-thumbs img{width:100%;height:100%;object-fit:cover;}
+@media(max-width:900px){
+  .gal{padding:14px var(--pad);}
+  .gal-arr{position:absolute;z-index:2;bottom:0;width:44px;height:44px;}
+  .gal-prev{left:0;}
+  .gal-next{right:0;}
+  .gal-frame{margin-bottom:56px;}
+  .gal-thumbs button{width:52px;height:52px;}
+}
 /* призыв под плитками: отдельная рамка по краям сетки, тёмный мутный фон, основная кнопка */
 .want-wrap{margin-top:clamp(48px,7vh,88px);}
 .want{display:flex;align-items:center;justify-content:space-between;gap:24px 48px;flex-wrap:wrap;
@@ -360,27 +396,7 @@ html:not(.motion) .sm-img:not(.is-active){display:none;}
   .want .btn{width:100%;}
 }
 
-/* ===== 7. Что оформляем: фото и простой список ===== */
-/* фото по высоте списка: верх и низ фото совпадают с первым и последним пунктом */
-.svc{align-items:stretch;margin-top:clamp(8px,2vh,24px);}
-.svc-pics{position:relative;display:flex;}
-.svc-main{position:relative;flex:1;min-height:420px;border-radius:var(--r);overflow:hidden;background:var(--bg2);}
-.svc-main img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transform:scale(1.04);transition:opacity .9s ease,transform 1.6s var(--ease);}
-.svc-main img.is-on{opacity:1;transform:none;}
-.svc-list{list-style:none;display:flex;flex-direction:column;gap:clamp(26px,4.2vh,46px);}
-.svc-list li{cursor:pointer;outline:none;transition:opacity .5s ease;opacity:.42;}
-.svc-list li.is-on,.svc-list li:focus-visible{opacity:1;}
-.svc-list h3{font-size:clamp(22px,2vw,30px);font-weight:300;line-height:1.15;transition:color .5s ease;}
-.svc-list li.is-on h3{color:var(--accent-hi);}
-.svc-list p{margin-top:10px;font-size:15px;color:var(--dim);max-width:460px;}
-@media(max-width:900px){
-  .svc-pics{margin-bottom:40px;}
-  .svc-main{flex:none;width:100%;min-height:0;aspect-ratio:4/3;}
-  .svc-list li{opacity:1;}
-  .svc-list li.is-on h3{color:var(--text);}
-}
-
-/* ===== 8. Заявка ===== */
+/* ===== 7. Заявка ===== */
 .fin{align-items:start;}
 .faq{display:flex;flex-direction:column;gap:8px;}
 details{border-radius:14px;background:rgba(15,12,9,.5);padding:18px 20px;}

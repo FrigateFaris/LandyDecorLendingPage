@@ -15,7 +15,7 @@
   initVideos();
   initTones();
   initCountdown();
-  initServices();
+  initGallery();
   initTalk();
   initForm();
   initGridToggle();
@@ -33,6 +33,7 @@
     lenis.on('scroll', ScrollTrigger.update);
     gsap.ticker.add(t => lenis.raf(t * 1000));
     gsap.ticker.lagSmoothing(0);
+    window.__lenis = lenis;   // галерея останавливает прокрутку страницы, пока открыта
   }
   const scrollToEl = sel => {
     const el = document.querySelector(sel);
@@ -202,8 +203,6 @@
   });
 
   // ---------- 7. Что оформляем: пункты списка проявляются по очереди ----------
-  gsap.fromTo('.svc-list li', { opacity: 0, y: 30 }, { opacity: (i, el) => el.classList.contains('is-on') || lite ? 1 : 0.42, y: 0, duration: 1.1, ease: 'expo.out', stagger: 0.07,
-    scrollTrigger: { trigger: '.svc-list', start: 'top 85%', once: true }, onComplete() { gsap.set('.svc-list li', { clearProps: 'opacity' }); } });
 
   // ---------- 6. Клиенты: фото в плитках бенто плывут с разной скоростью (запас 8% сверху и снизу) ----------
   if (!lite) gsap.utils.toArray('.case-img').forEach((box, i) => {   // на телефоне без параллакса
@@ -213,7 +212,7 @@
 
   // ---------- Кадры: шторка + наезд ----------
   gsap.utils.toArray('[data-reveal-img]').forEach((box, i) => {
-    const inner = box.classList.contains('svc-main') ? null : box.querySelector('img, video');   // у сменяемых фото услуг свой переход
+    const inner = box.querySelector('img, video');
     gsap.fromTo(box, { clipPath: 'inset(100% 0% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.4, ease: 'expo.inOut', delay: (i % 3) * 0.12, scrollTrigger: { trigger: box, start: 'top 88%', once: true } });
     if (inner) gsap.fromTo(inner, { scale: 1.3 }, { scale: 1, duration: 1.8, ease: 'expo.out', delay: (i % 3) * 0.12, scrollTrigger: { trigger: box, start: 'top 88%', once: true } });
   });
@@ -325,19 +324,74 @@ function initCountdown() {
   render(); setInterval(render, 1000);
 }
 
-// ---------- «Что оформляем»: наведение или нажатие на пункт меняет большое фото ----------
-function initServices() {
-  const list = document.querySelector('.svc-list');
-  if (!list) return;
-  const items = [...list.querySelectorAll('li')], pics = [...document.querySelectorAll('.svc-main img')];
-  const show = k => {
-    items.forEach(li => li.classList.toggle('is-on', li.dataset.k === k));
-    pics.forEach(im => im.classList.toggle('is-on', im.dataset.k === k));
+// ---------- Галерея объекта: нажатие на плитку клиента — все фото этого объекта ----------
+function initGallery() {
+  const gal = document.getElementById('gal');
+  if (!gal) return;
+  const root = document.documentElement;
+  const $ = q => gal.querySelector(q);
+  const imgs = [$('[data-gal-a]'), $('[data-gal-b]')], thumbs = $('[data-gal-thumbs]');
+  let list = [], cur = 0, front = 0, opener = null;
+  const pad = n => String(n).padStart(2, '0');
+
+  // два слоя: новое фото проявляется поверх старого, когда загрузилось
+  const show = (k, first) => {
+    cur = (k + list.length) % list.length;
+    const next = first ? imgs[0] : imgs[1 - front];
+    next.src = list[cur];
+    const swap = () => { imgs.forEach(im => im.classList.toggle('is-on', im === next)); front = imgs.indexOf(next); };
+    next.complete ? swap() : next.addEventListener('load', swap, { once: true });
+    $('[data-gal-count]').textContent = `${cur + 1} / ${list.length}`;
+    [...thumbs.children].forEach((t, i) => t.classList.toggle('is-on', i === cur));
+    const t = thumbs.children[cur];
+    if (t) thumbs.scrollTo({ left: t.offsetLeft - (thumbs.clientWidth - t.clientWidth) / 2, behavior: 'smooth' });
+    new Image().src = list[(cur + 1) % list.length];   // следующее фото грузится заранее
   };
-  items.forEach(li => {
-    li.addEventListener('mouseenter', () => show(li.dataset.k));
-    li.addEventListener('click', () => show(li.dataset.k));
-    li.addEventListener('focus', () => show(li.dataset.k));
+  const open = fig => {
+    const key = fig.dataset.gallery, n = +fig.dataset.count;
+    list = Array.from({ length: n }, (_, i) => `media/c/${key}/${pad(i + 1)}.webp`);
+    $('[data-gal-name]').textContent = fig.querySelector('figcaption b').textContent;
+    $('[data-gal-what]').textContent = fig.querySelector('figcaption span').textContent;
+    thumbs.innerHTML = list.map((src, i) => `<button type="button" aria-label="Фото ${i + 1}"><img src="${src.replace(/(\d+\.webp)$/, 't/$1')}" alt=""></button>`).join('');   // маленькие копии 160 px
+    [...thumbs.children].forEach((t, i) => t.addEventListener('click', () => show(i)));
+    imgs.forEach(im => { im.classList.remove('is-on'); im.removeAttribute('src'); });
+    front = 0; opener = fig;
+    gal.hidden = false;
+    void gal.offsetWidth;   // сначала показать блок, потом запустить плавное появление
+    gal.classList.add('is-open');
+    root.style.overflow = 'hidden'; window.__lenis?.stop();
+    show(0, true);
+    $('[data-gal-close]').focus({ preventScroll: true });
+  };
+  const close = () => {
+    gal.classList.remove('is-open');
+    root.style.overflow = ''; window.__lenis?.start();
+    setTimeout(() => { if (!gal.classList.contains('is-open')) gal.hidden = true; }, 600);
+    opener?.focus({ preventScroll: true });
+  };
+
+  document.querySelectorAll('.case[data-gallery]').forEach(fig => {
+    fig.addEventListener('click', () => open(fig));
+    fig.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(fig); } });
+  });
+  $('[data-gal-close]').addEventListener('click', close);
+  $('[data-gal-prev]').addEventListener('click', () => show(cur - 1));
+  $('[data-gal-next]').addEventListener('click', () => show(cur + 1));
+  gal.addEventListener('click', e => { if (e.target === gal || e.target.classList.contains('gal-stage')) close(); });
+  addEventListener('keydown', e => {
+    if (gal.hidden) return;
+    if (e.key === 'Escape') close();
+    if (e.key === 'ArrowRight') show(cur + 1);
+    if (e.key === 'ArrowLeft') show(cur - 1);
+  });
+  // листание пальцем
+  let x0 = null;
+  const frame = $('.gal-frame');
+  frame.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; }, { passive: true });
+  frame.addEventListener('touchend', e => {
+    if (x0 === null) return;
+    const dx = e.changedTouches[0].clientX - x0; x0 = null;
+    if (Math.abs(dx) > 40) show(cur + (dx < 0 ? 1 : -1));
   });
 }
 
