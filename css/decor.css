@@ -283,7 +283,7 @@ html:not(.motion) .sm-img:not(.is-active){display:none;}
 /* сцена с Нигиной: по центру видео 9:16, по бокам — его же размытая копия (canvas 18×24, растянутый браузером) */
 .sm-talk{background:var(--bg);}
 /* растянутый маленький canvas в Firefox даёт квадраты — поэтому поверх ещё настоящее размытие; края уведены за рамку */
-.sm-talk .talk-amb{position:absolute;inset:-12%;width:124%;height:124%;opacity:.9;filter:blur(28px) saturate(1.15);}
+.sm-talk .talk-amb{position:absolute;inset:-12%;width:124%;height:124%;opacity:.9;}   /* кадр 36×48, растянутый браузером, — уже мягкое пятно */
 .sm-talk .talk-vid{left:50%;right:auto;width:auto;height:100%;aspect-ratio:9/16;object-fit:cover;transform:translateX(-50%);border-radius:0;box-shadow:0 0 60px rgba(15,12,9,.5);}
 /* кнопка звука: видна, когда на экране сцена с Нигиной; на компьютере ярче при наведении на кадр */
 .talk-sound{position:absolute;z-index:5;left:50%;bottom:clamp(20px,4vh,36px);transform:translateX(-50%);display:flex;align-items:center;gap:10px;padding:12px 20px 12px 14px;border-radius:100px;background:rgba(15,12,9,.6);font-size:13px;font-weight:600;letter-spacing:.04em;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .4s,background .3s;}
@@ -443,10 +443,11 @@ details p{color:var(--dim);font-size:15px;margin-top:12px;}
 .story-media::after{content:"";position:absolute;left:0;right:0;bottom:0;height:50%;z-index:3;pointer-events:none;background:linear-gradient(180deg,transparent,rgba(15,12,9,.55) 45%,rgba(15,12,9,.92));}   /* под годом */
 .cine-shade{background:linear-gradient(180deg,rgba(15,12,9,.35),rgba(15,12,9,.1) 40%,rgba(15,12,9,.6) 70%,rgba(15,12,9,.92));}
 
-/* ===== Телефон: облегчённый режим (тот же вид, меньше работы для видеокарты) ===== */
-@media(max-width:900px){
+/* ===== Телефон и планшет: облегчённый режим (тот же вид, меньше работы для видеокарты) ===== */
+@media(max-width:900px),(pointer:coarse){
   .lights{display:none;}                                   /* огни: большой постоянно двигающийся слой */
   .stage > i{transition-duration:.8s;}
+  .want{background:rgba(15,12,9,.72);-webkit-backdrop-filter:none;backdrop-filter:none;}   /* размытие под рамкой пересчитывается на каждом шаге прокрутки */
 }
 
 /* ===== Анимации (классы, которые ставит decor.js) ===== */

@@ -8,8 +8,10 @@
   const hasGsap = !!(window.gsap && window.ScrollTrigger);
   const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
   // Облегчённый режим для телефонов: тот же вид, но без эффектов, которые пересчитываются на каждом шаге прокрутки
-  const lite = matchMedia('(max-width: 900px)').matches;
+  const narrow = matchMedia('(max-width: 900px)').matches;   // раскладка телефона (как в CSS)
   const touch = matchMedia('(pointer: coarse)').matches;
+  // облегчённые эффекты — на телефонах и на планшетах (iPad тоже сенсорный, а процессор слабее компьютера)
+  const lite = narrow || touch;
 
   initHeroVideo();
   initVideos();
@@ -181,7 +183,7 @@
   };
   spaceChapters();
   ScrollTrigger.addEventListener('refreshInit', spaceChapters);
-  if (!lite) scenes.forEach(scene => {   // на телефоне сцены «Истории» скрыта (картинки идут внутри глав) — смены кадров не считаем
+  if (!narrow) scenes.forEach(scene => {   // на телефоне сцены «Истории» скрыта (картинки идут внутри глав) — смены кадров не считаем
     const i = +scene.dataset.scene;
     if (!i) return;
     const ch = document.querySelector(`.chapter[data-scene="${i}"]`);
@@ -213,6 +215,10 @@
   // ---------- Кадры: шторка + наезд ----------
   gsap.utils.toArray('[data-reveal-img]').forEach((box, i) => {
     const inner = box.querySelector('img, video');
+    if (lite) {
+      gsap.fromTo(box, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 1.2, ease: 'expo.out', delay: (i % 2) * 0.1, scrollTrigger: { trigger: box, start: 'top 92%', once: true } });
+      return;
+    }
     gsap.fromTo(box, { clipPath: 'inset(100% 0% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.4, ease: 'expo.inOut', delay: (i % 3) * 0.12, scrollTrigger: { trigger: box, start: 'top 88%', once: true } });
     if (inner) gsap.fromTo(inner, { scale: 1.3 }, { scale: 1, duration: 1.8, ease: 'expo.out', delay: (i % 3) * 0.12, scrollTrigger: { trigger: box, start: 'top 88%', once: true } });
   });
@@ -287,10 +293,14 @@ function initHeroVideo() {
 // ---------- Видео-петли: грузим и играем, только когда видны ----------
 function initVideos() {
   const vids = document.querySelectorAll('video.vid');
-  const start = v => { if (!v.src && v.dataset.src) v.src = v.dataset.src; v.play().catch(() => {}); };
+  const small = matchMedia('(max-width: 900px), (pointer: coarse)').matches;
+  const start = v => { if (!v.src && v.dataset.src) v.src = (small && v.dataset.srcM) || v.dataset.src; v.play().catch(() => {}); };
   if (!('IntersectionObserver' in window)) { vids.forEach(start); return; }
   const io = new IntersectionObserver(es => es.forEach(e => e.isIntersecting ? start(e.target) : e.target.pause()), { rootMargin: '200px 0px' });
   vids.forEach(v => io.observe(v));
+  // видео первого экрана: пауза, когда прокрутили ниже, — иначе оно декодируется всё время, пока листают сайт
+  const hero = document.querySelector('video.hero-vid');
+  if (hero) new IntersectionObserver(es => es.forEach(e => e.isIntersecting ? hero.play().catch(() => {}) : hero.pause())).observe(hero);
 }
 
 // ---------- Общий фон: тон берётся у секции, которая пересекает середину экрана ----------
@@ -405,6 +415,7 @@ function initTalk() {
   const buttons = document.querySelectorAll('[data-talk]');
   let on = false, timer = null;
   // размытые бока: раз в 120 мс копируем кадр видео в крошечный canvas — браузер сам растягивает его в мягкое пятно
+  if ('filter' in ctx) ctx.filter = 'blur(2px) saturate(1.15)';
   const draw = () => { if (v.readyState >= 2) try { ctx.drawImage(v, 0, 0, amb.width, amb.height); } catch (e) {} };
   const setSound = loud => {
     v.muted = !loud;
@@ -423,7 +434,7 @@ function initTalk() {
   let warm = false;
   const run = play => {
     if (play) {
-      if (!v.src) v.src = v.dataset.src;
+      if (!v.src) v.src = v.dataset.src;   // talk.mp4 уже 720p
       if (v.paused) v.play().catch(() => {});
       if (!timer) timer = setInterval(draw, 120);
     } else {
