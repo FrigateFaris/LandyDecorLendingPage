@@ -15,8 +15,7 @@
   initVideos();
   initTones();
   initCountdown();
-  initAccordion();
-  initReels();
+  initServices();
   initTalk();
   initForm();
   initGridToggle();
@@ -123,7 +122,9 @@
     .to('.cs-r', { x: '45vw', y: '-30vh', rotation: 10, opacity: 0, ease: 'power2.in', duration: 0.75 }, 0.68)
     .to('.ct-night', { opacity: 0, duration: 0.2 }, 1.35)
     .fromTo('.cine-shade', { opacity: 0.2 }, { opacity: 1, duration: 0.5 }, 1.1)
-    .fromTo('.cine-cap > *', { opacity: 0, y: 40 }, { opacity: 1, y: 0, stagger: 0.1, duration: 0.4, ease: 'power2.out' }, 1.45);
+    .fromTo('.cine-cap > *', { opacity: 0, y: 40 }, { opacity: 1, y: 0, stagger: 0.1, duration: 0.4, ease: 'power2.out' }, 1.45)
+    // нижние 40% видео плавно растворяются в фоне — к «Истории» переход без резкой границы
+    .fromTo(frame, { '--cf': '0%' }, { '--cf': '40%', ease: 'none', duration: 0.5 }, 1.5);
 
   // ---------- 5. История: смена сцен ----------
   const scenes = document.querySelectorAll('.sm-img');
@@ -200,11 +201,9 @@
     if (prev) gsap.fromTo(prev, { yPercent: 0 }, { yPercent: -12, ease: 'none', scrollTrigger: { ...st } });
   });
 
-  // ---------- 7. Панели услуг: выезжают по очереди ----------
-  gsap.fromTo('.acc-item', { opacity: 0, y: 80 }, { opacity: 1, y: 0, duration: 1.2, ease: 'expo.out', stagger: 0.08, scrollTrigger: { trigger: '.acc', start: 'top 85%', once: true } });
-
-  // ---------- 8. Ролики: лента въезжает сбоку ----------
-  gsap.fromTo('.reel', { opacity: 0, x: 120 }, { opacity: 1, x: 0, duration: 1.3, ease: 'expo.out', stagger: 0.07, scrollTrigger: { trigger: '.reel-row', start: 'top 85%', once: true } });
+  // ---------- 7. Что оформляем: пункты списка проявляются по очереди ----------
+  gsap.fromTo('.svc-list li', { opacity: 0, y: 30 }, { opacity: (i, el) => el.classList.contains('is-on') || lite ? 1 : 0.42, y: 0, duration: 1.1, ease: 'expo.out', stagger: 0.07,
+    scrollTrigger: { trigger: '.svc-list', start: 'top 85%', once: true }, onComplete() { gsap.set('.svc-list li', { clearProps: 'opacity' }); } });
 
   // ---------- 6. Клиенты: фото в плитках бенто плывут с разной скоростью (запас 8% сверху и снизу) ----------
   if (!lite) gsap.utils.toArray('.case-img').forEach((box, i) => {   // на телефоне без параллакса
@@ -212,28 +211,26 @@
     gsap.fromTo(box, { yPercent: -amp }, { yPercent: amp, ease: 'none', scrollTrigger: { trigger: box.parentElement, start: 'top bottom', end: 'bottom top', scrub: true } });
   });
 
-  // ---------- 9–10. Кадры процесса и деталей: шторка + наезд, внутри — параллакс ----------
+  // ---------- Кадры: шторка + наезд ----------
   gsap.utils.toArray('[data-reveal-img]').forEach((box, i) => {
-    const inner = box.querySelector('img, video');
+    const inner = box.classList.contains('svc-main') ? null : box.querySelector('img, video');   // у сменяемых фото услуг свой переход
     gsap.fromTo(box, { clipPath: 'inset(100% 0% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.4, ease: 'expo.inOut', delay: (i % 3) * 0.12, scrollTrigger: { trigger: box, start: 'top 88%', once: true } });
     if (inner) gsap.fromTo(inner, { scale: 1.3 }, { scale: 1, duration: 1.8, ease: 'expo.out', delay: (i % 3) * 0.12, scrollTrigger: { trigger: box, start: 'top 88%', once: true } });
   });
 
-  // ---------- 11. Заявка ----------
+  // ---------- 8. Заявка ----------
   gsap.fromTo('.faq details, .contact-cards a', { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 1, ease: 'expo.out', stagger: 0.08, scrollTrigger: { trigger: '.fin', start: 'top 75%', once: true } });
   gsap.fromTo('.lead', { opacity: 0, y: 60 }, { opacity: 1, y: 0, duration: 1.2, ease: 'expo.out', scrollTrigger: { trigger: '.fin', start: 'top 75%', once: true } });
 
-  // ---------- Подвал: LANDY·DECOR по буквам ----------
-  const big = document.querySelector('.ftr-big');
-  big.innerHTML = [...big.textContent].map(ch => `<span class="lt">${ch}</span>`).join('');
-  gsap.fromTo(big.querySelectorAll('.lt'), { yPercent: 100, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 1.2, ease: 'expo.out', stagger: 0.04, scrollTrigger: { trigger: '.ftr', start: 'top 85%', once: true } });
+  // ---------- Подвал: логотип landy decor поднимается из-под маски ----------
+  gsap.fromTo('.ftr-logo', { clipPath: 'inset(100% 0% 0% 0%)', y: 40 }, { clipPath: 'inset(0% 0% -10% 0%)', y: 0, duration: 1.4, ease: 'expo.out', scrollTrigger: { trigger: '.ftr', start: 'top 85%', once: true } });
 
   // ---------- Мелкие элементы: мягко поднимаются группами ----------
   gsap.set('[data-r]', { opacity: 0, y: 40 });
   ScrollTrigger.batch('[data-r]', { start: 'top 92%', once: true, onEnter: els => gsap.to(els, { opacity: 1, y: 0, duration: 1.1, ease: 'expo.out', stagger: 0.09 }) });
 
   // ---------- Кнопки слегка тянутся за курсором ----------
-  if (finePointer) document.querySelectorAll('.btn, .arr').forEach(btn => {
+  if (finePointer) document.querySelectorAll('.btn').forEach(btn => {
     const xTo = gsap.quickTo(btn, 'x', { duration: 0.5, ease: 'power3' }), yTo = gsap.quickTo(btn, 'y', { duration: 0.5, ease: 'power3' });
     btn.addEventListener('mousemove', e => { const r = btn.getBoundingClientRect(); xTo((e.clientX - r.left - r.width / 2) * 0.25); yTo((e.clientY - r.top - r.height / 2) * 0.35); });
     btn.addEventListener('mouseleave', () => { xTo(0); yTo(0); });
@@ -328,55 +325,20 @@ function initCountdown() {
   render(); setInterval(render, 1000);
 }
 
-// ---------- Панели «Что оформляем»: раскрываются по нажатию или если задержать на панели курсор ----------
-// Без автопролистывания: спокойнее и дороже. Короткий пробег мышью по панелям ничего не дёргает.
-function initAccordion() {
-  const acc = document.querySelector('.acc');
-  if (!acc) return;
-  const items = [...acc.querySelectorAll('.acc-item')];
-  const open = it => { if (!it.classList.contains('is-open')) items.forEach(x => x.classList.toggle('is-open', x === it)); };
-  const desktop = matchMedia('(min-width: 901px) and (hover: hover)').matches;
-  let hoverTimer = null;
-  items.forEach(it => {
-    if (desktop) {
-      it.addEventListener('mouseenter', () => { clearTimeout(hoverTimer); hoverTimer = setTimeout(() => open(it), 280); });
-      it.addEventListener('mouseleave', () => clearTimeout(hoverTimer));
-    }
-    it.addEventListener('click', () => { clearTimeout(hoverTimer); open(it); });
-    it.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(it); } });
+// ---------- «Что оформляем»: наведение или нажатие на пункт меняет большое фото ----------
+function initServices() {
+  const list = document.querySelector('.svc-list');
+  if (!list) return;
+  const items = [...list.querySelectorAll('li')], pics = [...document.querySelectorAll('.svc-main img')];
+  const show = k => {
+    items.forEach(li => li.classList.toggle('is-on', li.dataset.k === k));
+    pics.forEach(im => im.classList.toggle('is-on', im.dataset.k === k));
+  };
+  items.forEach(li => {
+    li.addEventListener('mouseenter', () => show(li.dataset.k));
+    li.addEventListener('click', () => show(li.dataset.k));
+    li.addEventListener('focus', () => show(li.dataset.k));
   });
-}
-
-// ---------- Ролики: наведение — превью без звука, клик — на весь экран ----------
-function initReels() {
-  const row = document.querySelector('.reel-row');
-  if (!row) return;
-  const reels = [...row.querySelectorAll('.reel')];
-  const play = r => { const v = r.querySelector('video'); if (!v.src) v.src = r.dataset.src; v.play().then(() => r.classList.add('on')).catch(() => {}); };
-  const stop = r => { r.querySelector('video').pause(); r.classList.remove('on'); };
-  const hover = matchMedia('(hover: hover)').matches;
-  if (hover) reels.forEach(r => { r.addEventListener('mouseenter', () => play(r)); r.addEventListener('mouseleave', () => stop(r)); });
-  else if ('IntersectionObserver' in window) {
-    const io = new IntersectionObserver(es => es.forEach(e => e.intersectionRatio > 0.7 ? play(e.target) : stop(e.target)), { threshold: [0, 0.7, 1] });
-    reels.forEach(r => io.observe(r));
-  }
-  // стрелки и перетаскивание мышью
-  const step = () => reels[0].getBoundingClientRect().width + parseFloat(getComputedStyle(row).columnGap || 16);
-  document.querySelectorAll('.arr').forEach(b => b.addEventListener('click', () => row.scrollBy({ left: step() * +b.dataset.dir * 2, behavior: 'smooth' })));
-  let down = false, sx = 0, sl = 0, moved = false;
-  row.addEventListener('pointerdown', e => { if (e.pointerType !== 'mouse') return; down = true; moved = false; sx = e.clientX; sl = row.scrollLeft; });
-  addEventListener('pointermove', e => { if (!down) return; const dx = e.clientX - sx; if (Math.abs(dx) > 5) { moved = true; row.classList.add('dragging'); } row.scrollLeft = sl - dx; });
-  addEventListener('pointerup', () => { if (!down) return; down = false; row.classList.remove('dragging'); });
-  // окно на весь экран
-  const lb = document.getElementById('lb'), lv = lb.querySelector('video');
-  const close = () => { lv.pause(); lv.removeAttribute('src'); lv.load(); lb.hidden = true; document.documentElement.style.overflow = ''; };
-  reels.forEach(r => r.addEventListener('click', e => {
-    if (moved) { e.preventDefault(); moved = false; return; }
-    stop(r); lb.hidden = false; document.documentElement.style.overflow = 'hidden';
-    lv.src = r.dataset.src; lv.muted = false; lv.play().catch(() => {});
-  }));
-  lb.addEventListener('click', e => { if (e.target === lb || e.target.closest('.lb-close')) close(); });
-  addEventListener('keydown', e => { if (e.key === 'Escape' && !lb.hidden) close(); });
 }
 
 // ---------- Видео-обращение Нигины в истории: фоном без звука, звук — по кнопке ----------
