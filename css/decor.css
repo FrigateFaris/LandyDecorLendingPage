@@ -18,7 +18,6 @@
   --line:rgba(233,233,232,.12);
   --dim:rgba(233,233,232,.72); --dim2:rgba(233,233,232,.5);
   --font:'Manrope',-apple-system,BlinkMacSystemFont,sans-serif;
-  --serif:'Cormorant Garamond',Georgia,serif;   /* выделенные слова в заголовках — как у Landy Interior */
   --ease:cubic-bezier(.16,.9,.3,1);
 
   /* сетка */
@@ -41,7 +40,6 @@ img,video{display:block;max-width:100%;}
 a{color:inherit;text-decoration:none;}
 button{font-family:inherit;border:none;background:none;color:inherit;cursor:pointer;}
 em{font-style:normal;color:var(--accent);}
-:is(h1,h2,h3,.statement-text,.want) em{font-family:var(--serif);font-style:italic;font-weight:400;letter-spacing:-.01em;}
 h1,h2,h3,h4{font-weight:300;letter-spacing:-.02em;line-height:1.08;}
 h2{font-size:clamp(28px,3.4vw,54px);}
 fieldset{border:none;}
@@ -346,38 +344,38 @@ html:not(.motion) .sm-img:not(.is-active){display:none;}
 .case b{display:block;font-size:clamp(19px,1.4vw,24px);font-weight:300;line-height:1.1;}
 .b-big b{font-size:clamp(24px,2vw,34px);}
 .case span{display:block;margin-top:6px;font-size:14px;color:var(--dim);}
-.want-wrap{margin-top:clamp(40px,6vh,72px);}
-.want{display:flex;align-items:baseline;justify-content:center;flex-wrap:wrap;gap:.3em .45em;font-size:clamp(26px,3vw,44px);font-weight:300;letter-spacing:-.01em;text-align:center;}
-.want i{font-style:normal;color:var(--accent);display:inline-block;transition:transform .6s var(--ease);}
-.want em{position:relative;}
-.want em::after{content:"";position:absolute;left:0;right:0;bottom:-.08em;height:1px;background:currentColor;transform:scaleX(0);transform-origin:left;transition:transform .7s var(--ease);}
-.want:hover em::after{transform:scaleX(1);}
-.want:hover i{transform:translateX(8px);}
+/* призыв под плитками: отдельная рамка по краям сетки, тёмный мутный фон, основная кнопка */
+.want-wrap{margin-top:clamp(48px,7vh,88px);}
+.want{display:flex;align-items:center;justify-content:space-between;gap:24px 48px;flex-wrap:wrap;
+  padding:clamp(28px,3.4vw,52px) clamp(24px,3.4vw,52px);border-radius:var(--r);
+  background:rgba(15,12,9,.5);-webkit-backdrop-filter:blur(22px) saturate(1.1);backdrop-filter:blur(22px) saturate(1.1);}
+.want h3{font-size:clamp(26px,2.6vw,40px);font-weight:300;line-height:1.1;letter-spacing:-.01em;}
+.want p{margin-top:10px;font-size:15px;color:var(--dim);max-width:460px;}
 @media(max-width:900px){
   .bento{grid-auto-rows:clamp(170px,26vh,240px);}
   .b-big{grid-column:1 / -1;grid-row:span 2;}
   .b-tall,.b-sm,.b-row{grid-column:span 3;grid-row:span 1;}
   .bento > .case:last-child{grid-column:1 / -1;}   /* пять малых плиток — последняя на всю ширину, без пустого места */
+  .want{background:rgba(15,12,9,.72);-webkit-backdrop-filter:none;backdrop-filter:none;}   /* на телефоне без размытия — оно тормозит прокрутку */
+  .want .btn{width:100%;}
 }
 
-/* ===== 7. Что оформляем: две фотографии и простой список ===== */
-.svc{align-items:center;}
-.svc-pics{position:relative;padding-bottom:clamp(40px,8vh,90px);}
-.svc-main{position:relative;aspect-ratio:4/5;border-radius:var(--r);overflow:hidden;background:var(--bg2);}
+/* ===== 7. Что оформляем: фото и простой список ===== */
+/* фото по высоте списка: верх и низ фото совпадают с первым и последним пунктом */
+.svc{align-items:stretch;margin-top:clamp(8px,2vh,24px);}
+.svc-pics{position:relative;display:flex;}
+.svc-main{position:relative;flex:1;min-height:420px;border-radius:var(--r);overflow:hidden;background:var(--bg2);}
 .svc-main img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transform:scale(1.04);transition:opacity .9s ease,transform 1.6s var(--ease);}
 .svc-main img.is-on{opacity:1;transform:none;}
-.svc-inset{position:absolute;right:calc(-1 * var(--gut) * 2);bottom:0;width:42%;aspect-ratio:1;border-radius:var(--r);overflow:hidden;box-shadow:0 0 0 8px var(--bg);}
-.svc-inset img{width:100%;height:100%;object-fit:cover;}
-.svc-list{list-style:none;display:flex;flex-direction:column;gap:clamp(14px,2.4vh,26px);}
+.svc-list{list-style:none;display:flex;flex-direction:column;gap:clamp(26px,4.2vh,46px);}
 .svc-list li{cursor:pointer;outline:none;transition:opacity .5s ease;opacity:.42;}
 .svc-list li.is-on,.svc-list li:focus-visible{opacity:1;}
 .svc-list h3{font-size:clamp(22px,2vw,30px);font-weight:300;line-height:1.15;transition:color .5s ease;}
 .svc-list li.is-on h3{color:var(--accent-hi);}
-.svc-list p{margin-top:6px;font-size:15px;color:var(--dim);max-width:460px;}
+.svc-list p{margin-top:10px;font-size:15px;color:var(--dim);max-width:460px;}
 @media(max-width:900px){
-  .svc-pics{padding-bottom:0;margin-bottom:28px;}
-  .svc-main{aspect-ratio:4/3;}
-  .svc-inset{display:none;}
+  .svc-pics{margin-bottom:40px;}
+  .svc-main{flex:none;width:100%;min-height:0;aspect-ratio:4/3;}
   .svc-list li{opacity:1;}
   .svc-list li.is-on h3{color:var(--text);}
 }
@@ -416,7 +414,7 @@ details p{color:var(--dim);font-size:15px;margin-top:12px;}
 .ftr .grid{row-gap:30px;}
 .ftr-logo{display:flex;align-items:flex-end;gap:clamp(8px,1.4vw,22px);margin-bottom:24px;color:#E9E9E8;}
 .ftr-logo .fw-logo{display:block;width:min(78%,1100px);height:auto;}
-.ftr-logo span{font-family:var(--serif);font-style:italic;font-size:clamp(28px,6vw,110px);line-height:.8;color:var(--accent-hi);padding-bottom:.08em;}
+.ftr-logo span{font-size:clamp(22px,4.4vw,80px);font-weight:300;letter-spacing:.04em;line-height:.8;color:var(--accent-hi);padding-bottom:.08em;}
 .ftr h5{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim2);font-weight:600;margin-bottom:14px;}
 .ftr .grid > div > a:not(.btn){display:block;margin-bottom:9px;color:var(--dim);font-size:14.5px;transition:color .3s;}
 .ftr .grid > div > a:not(.btn):hover{color:var(--accent);}
