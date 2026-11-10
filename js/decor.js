@@ -359,10 +359,10 @@ function initGallery() {
   };
   const open = fig => {
     const key = fig.dataset.gallery, n = +fig.dataset.count;
-    list = Array.from({ length: n }, (_, i) => `media/c/${key}/${pad(i + 1)}.webp`);
+    list = Array.from({ length: n }, (_, i) => `media/clients/${key}/${pad(i + 1)}.webp`);
     $('[data-gal-name]').textContent = fig.querySelector('figcaption b').textContent;
     $('[data-gal-what]').textContent = fig.querySelector('figcaption span').textContent;
-    thumbs.innerHTML = list.map((src, i) => `<button type="button" aria-label="Фото ${i + 1}"><img src="${src.replace(/(\d+\.webp)$/, 't/$1')}" alt=""></button>`).join('');   // маленькие копии 160 px
+    thumbs.innerHTML = list.map((src, i) => `<button type="button" aria-label="Фото ${i + 1}"><img src="${src.replace(/(\d+\.webp)$/, 'thumbs/$1')}" alt=""></button>`).join('');   // маленькие копии 160 px
     [...thumbs.children].forEach((t, i) => t.addEventListener('click', () => show(i)));
     imgs.forEach(im => { im.classList.remove('is-on'); im.removeAttribute('src'); });
     front = 0; opener = fig;
